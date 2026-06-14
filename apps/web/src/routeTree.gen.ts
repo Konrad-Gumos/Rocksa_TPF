@@ -21,6 +21,7 @@ import { Route as WorkspaceInventoryRouteImport } from './routes/workspace/inven
 import { Route as WorkspaceAnalyticsRouteImport } from './routes/workspace/analytics'
 import { Route as WorkspaceAcquisitionsRouteImport } from './routes/workspace/acquisitions'
 import { Route as OrdersOrderIdRouteImport } from './routes/orders/$orderId'
+import { Route as CheckoutReviewRouteImport } from './routes/checkout/review'
 import { Route as CheckoutPaymentRouteImport } from './routes/checkout/payment'
 import { Route as AuthResetRouteImport } from './routes/auth/reset'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
@@ -89,6 +90,11 @@ const OrdersOrderIdRoute = OrdersOrderIdRouteImport.update({
   path: '/orders/$orderId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckoutReviewRoute = CheckoutReviewRouteImport.update({
+  id: '/checkout/review',
+  path: '/checkout/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CheckoutPaymentRoute = CheckoutPaymentRouteImport.update({
   id: '/checkout/payment',
   path: '/checkout/payment',
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset': typeof AuthResetRoute
   '/checkout/payment': typeof CheckoutPaymentRoute
+  '/checkout/review': typeof CheckoutReviewRoute
   '/orders/$orderId': typeof OrdersOrderIdRoute
   '/workspace/acquisitions': typeof WorkspaceAcquisitionsRoute
   '/workspace/analytics': typeof WorkspaceAnalyticsRoute
@@ -155,6 +162,7 @@ export interface FileRoutesByTo {
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset': typeof AuthResetRoute
   '/checkout/payment': typeof CheckoutPaymentRoute
+  '/checkout/review': typeof CheckoutReviewRoute
   '/orders/$orderId': typeof OrdersOrderIdRoute
   '/workspace/acquisitions': typeof WorkspaceAcquisitionsRoute
   '/workspace/analytics': typeof WorkspaceAnalyticsRoute
@@ -177,6 +185,7 @@ export interface FileRoutesById {
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset': typeof AuthResetRoute
   '/checkout/payment': typeof CheckoutPaymentRoute
+  '/checkout/review': typeof CheckoutReviewRoute
   '/orders/$orderId': typeof OrdersOrderIdRoute
   '/workspace/acquisitions': typeof WorkspaceAcquisitionsRoute
   '/workspace/analytics': typeof WorkspaceAnalyticsRoute
@@ -200,6 +209,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/auth/reset'
     | '/checkout/payment'
+    | '/checkout/review'
     | '/orders/$orderId'
     | '/workspace/acquisitions'
     | '/workspace/analytics'
@@ -220,6 +230,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/auth/reset'
     | '/checkout/payment'
+    | '/checkout/review'
     | '/orders/$orderId'
     | '/workspace/acquisitions'
     | '/workspace/analytics'
@@ -241,6 +252,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/auth/reset'
     | '/checkout/payment'
+    | '/checkout/review'
     | '/orders/$orderId'
     | '/workspace/acquisitions'
     | '/workspace/analytics'
@@ -260,6 +272,7 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   DevComponentsRoute: typeof DevComponentsRoute
   CheckoutPaymentRoute: typeof CheckoutPaymentRoute
+  CheckoutReviewRoute: typeof CheckoutReviewRoute
   OrdersOrderIdRoute: typeof OrdersOrderIdRoute
   CheckoutIndexRoute: typeof CheckoutIndexRoute
   CCategoryIndexRoute: typeof CCategoryIndexRoute
@@ -350,6 +363,13 @@ declare module '@tanstack/react-router' {
       path: '/orders/$orderId'
       fullPath: '/orders/$orderId'
       preLoaderRoute: typeof OrdersOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout/review': {
+      id: '/checkout/review'
+      path: '/checkout/review'
+      fullPath: '/checkout/review'
+      preLoaderRoute: typeof CheckoutReviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout/payment': {
@@ -449,6 +469,7 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   DevComponentsRoute: DevComponentsRoute,
   CheckoutPaymentRoute: CheckoutPaymentRoute,
+  CheckoutReviewRoute: CheckoutReviewRoute,
   OrdersOrderIdRoute: OrdersOrderIdRoute,
   CheckoutIndexRoute: CheckoutIndexRoute,
   CCategoryIndexRoute: CCategoryIndexRoute,
