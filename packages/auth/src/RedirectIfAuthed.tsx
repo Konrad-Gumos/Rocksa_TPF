@@ -1,18 +1,19 @@
 import type { ReactNode } from "react";
 import { Navigate } from "@tanstack/react-router";
 import { useAuth } from "./AuthProvider.tsx";
+import { defaultRouteForRole } from "./routes.ts";
 
 interface Props {
-  redirectTo?: string;
+  redirectTo?: "/" | "/workspace/overview";
   children: ReactNode;
 }
 
-export const RedirectIfAuthed = ({
-  redirectTo = "/workspace/overview",
-  children,
-}: Props) => {
-  const { status } = useAuth();
+export const RedirectIfAuthed = ({ redirectTo, children }: Props) => {
+  const { status, profile } = useAuth();
   if (status === "loading") return null;
-  if (status === "authed") return <Navigate to={redirectTo} />;
+  if (status === "authed") {
+    const dest = redirectTo ?? (profile ? defaultRouteForRole(profile.role) : "/");
+    return <Navigate to={dest} />;
+  }
   return <>{children}</>;
 };

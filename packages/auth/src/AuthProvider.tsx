@@ -38,17 +38,17 @@ export interface AuthValue {
   profile: SessionProfile | null;
   status: AuthStatus;
   getIdToken: () => Promise<string | null>;
-  signIn: (email: string, password: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<SessionProfile>;
   signUp: (
     email: string,
     password: string,
     fullName?: string,
     options?: SignUpOptions,
-  ) => Promise<void>;
+  ) => Promise<SessionProfile>;
   signOut: () => Promise<void>;
   sendReset: (email: string) => Promise<void>;
-  signInWithGoogle: () => Promise<void>;
-  signInWithApple: () => Promise<void>;
+  signInWithGoogle: () => Promise<SessionProfile>;
+  signInWithApple: () => Promise<SessionProfile>;
 }
 
 const AuthContext = createContext<AuthValue | null>(null);
@@ -97,11 +97,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [bootstrap]);
 
   const withBootstrap = useCallback(
-    async (run: () => Promise<User>, opts?: SyncOptions) => {
+    async (run: () => Promise<User>, opts?: SyncOptions): Promise<SessionProfile> => {
       bootstrappingRef.current = true;
       try {
         const nextUser = await run();
-        await bootstrap(nextUser, opts);
+        return await bootstrap(nextUser, opts);
       } finally {
         bootstrappingRef.current = false;
       }
@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       status,
       getIdToken: async () => (user ? user.getIdToken() : null),
       signIn: async (email, password) => {
-        await withBootstrap(() =>
+        return withBootstrap(() =>
           signInWithEmailAndPassword(firebaseAuth, email, password).then(
             (c) => c.user,
           ),
@@ -124,10 +124,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       },
       signUp: async (email, password, fullName, options) => {
         const syncOpts: SyncOptions = {
-          role: options?.role ?? "curator",
+          role: options?.role ?? "buyer",
           fullName: fullName ?? null,
         };
-        await withBootstrap(async () => {
+        return withBootstrap(async () => {
           const cred = await createUserWithEmailAndPassword(
             firebaseAuth,
             email,
@@ -144,14 +144,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         await sendPasswordResetEmail(firebaseAuth, email);
       },
       signInWithGoogle: async () => {
-        await withBootstrap(() =>
+        return withBootstrap(() =>
           signInWithPopup(firebaseAuth, new GoogleAuthProvider()).then(
             (c) => c.user,
           ),
         );
       },
       signInWithApple: async () => {
-        await withBootstrap(() =>
+        return withBootstrap(() =>
           signInWithPopup(firebaseAuth, new OAuthProvider("apple.com")).then(
             (c) => c.user,
           ),

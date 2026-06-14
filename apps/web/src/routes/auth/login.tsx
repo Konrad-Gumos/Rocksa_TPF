@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Button, Card, CardBody, Input } from "@rocksa/ui";
-import { useAuth } from "@rocksa/auth";
+import { useAuth, defaultRouteForRole } from "@rocksa/auth";
 
 export const Route = createFileRoute("/auth/login")({ component: Login });
 
@@ -18,8 +18,8 @@ function Login() {
     setError(null);
     setBusy(true);
     try {
-      await auth.signIn(email, password);
-      navigate({ to: "/workspace/overview" });
+      const profile = await auth.signIn(email, password);
+      navigate({ to: defaultRouteForRole(profile.role) });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Sign-in failed");
     } finally {
@@ -27,11 +27,11 @@ function Login() {
     }
   };
 
-  const oauth = (fn: () => Promise<void>) => async () => {
+  const oauth = (fn: () => Promise<{ role: string }>) => async () => {
     setError(null);
     try {
-      await fn();
-      navigate({ to: "/workspace/overview" });
+      const profile = await fn();
+      navigate({ to: defaultRouteForRole(profile.role) });
     } catch (err) {
       setError(err instanceof Error ? err.message : "OAuth failed");
     }
