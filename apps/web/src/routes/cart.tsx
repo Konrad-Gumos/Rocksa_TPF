@@ -2,9 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button, Card, CardBody, Separator } from "@rocksa/ui";
 import { formatPrice, type Specimen } from "@rocksa/domain";
 import { useCart } from "@rocksa/cart";
-import { useSpecimenLookup, useSpecimens } from "../data/api-specimens.ts";
+import { useSpecimenLookup, useSpecimens } from "../data/specimens-query.ts";
 import { ArrowRightIcon, CloseIcon, LockIcon } from "../components/Icons.tsx";
 import { TopNav } from "../components/TopNav.tsx";
+import { AnimatedPage } from "../components/motion/AnimatedPage.tsx";
+import { layoutPaddingX, layoutPaddingY } from "../lib/layout.ts";
 import { EmptyStateSuggestions } from "../components/EmptyStateSuggestions.tsx";
 import { QtyStepper } from "../components/QtyStepper.tsx";
 import { cartAttributeRows } from "../lib/cart-attributes.ts";
@@ -19,10 +21,10 @@ function CartPage() {
   const suggestions = (allSpecimens.data ?? []).slice(0, 4);
 
   return (
-    <div className="min-h-screen">
+    <AnimatedPage className="min-h-screen">
       <TopNav />
 
-      <main className="mx-auto max-w-[1200px] px-6 py-12">
+      <main className={`mx-auto max-w-[1200px] ${layoutPaddingX} ${layoutPaddingY}`}>
         <h1 className="font-display text-5xl">Your Cart</h1>
         <p className="text-ink-500 mt-2">
           {count} item{count === 1 ? "" : "s"} meticulously selected.
@@ -77,16 +79,9 @@ function CartPage() {
                 <Separator />
                 <div className="flex items-baseline justify-between">
                   <span className="font-display text-2xl">Total</span>
-                  <span className="font-display text-2xl">
-                    {formatPrice(total)}
-                  </span>
+                  <span className="font-display text-2xl">{formatPrice(total)}</span>
                 </div>
-                <Button
-                  asChild
-                  className="w-full mt-2"
-                  size="lg"
-                  disabled={items.length === 0}
-                >
+                <Button asChild className="w-full mt-2" size="lg" disabled={items.length === 0}>
                   <Link to="/checkout">
                     PROCEED TO CHECKOUT <ArrowRightIcon className="h-4 w-4" />
                   </Link>
@@ -99,7 +94,7 @@ function CartPage() {
           </aside>
         </div>
       </main>
-    </div>
+    </AnimatedPage>
   );
 }
 
@@ -118,11 +113,7 @@ const CartRow = ({
 }) => (
   <Card>
     <CardBody className="flex gap-5 p-0">
-      <img
-        src={specimen.imageUrl}
-        alt=""
-        className="h-40 w-40 rounded-l-lg object-cover"
-      />
+      <img src={specimen.imageUrl} alt="" className="h-40 w-40 rounded-l-lg object-cover" />
       <div className="flex flex-1 flex-col p-5">
         <div className="flex justify-between">
           <h3 className="font-display text-2xl">{specimen.name}</h3>
@@ -151,9 +142,7 @@ const CartRow = ({
                 {formatPrice(specimen.compareAtCents * qty)}
               </p>
             )}
-            <p className="font-display text-2xl text-brand-600">
-              {formatPrice(lineCents)}
-            </p>
+            <p className="font-display text-2xl text-brand-600">{formatPrice(lineCents)}</p>
           </div>
         </div>
       </div>

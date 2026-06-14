@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button, Card, CardBody } from "@rocksa/ui";
 import { formatPrice } from "@rocksa/domain";
 import { fetchOrders } from "../../data/api-orders.ts";
+import { storefrontMainClassName } from "../../lib/layout.ts";
 
 export const Route = createFileRoute("/account/orders")({ component: AccountOrdersPage });
 
@@ -17,14 +18,18 @@ const statusLabel = (status: string): string =>
   status.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
 function AccountOrdersPage() {
-  const { data: orders = [], isLoading, isError } = useQuery({
+  const {
+    data: orders = [],
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["orders"],
     queryFn: fetchOrders,
     staleTime: 30_000,
   });
 
   return (
-    <main className="flex-1 px-10 py-12">
+    <main className={storefrontMainClassName}>
       <h1 className="font-display text-5xl">Your Orders</h1>
       <p className="mt-2 text-ink-500">A record of your acquisitions with Rocksa.</p>
 

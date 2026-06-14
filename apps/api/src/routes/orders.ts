@@ -2,13 +2,7 @@ import { Hono } from "hono";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@rocksa/db";
-import {
-  auditLog,
-  orderItems,
-  orders,
-  specimenAttrs,
-  specimens,
-} from "@rocksa/db/schema";
+import { auditLog, orderItems, orders, specimenAttrs, specimens } from "@rocksa/db/schema";
 import { orderReference } from "@rocksa/domain";
 import { requireAuth, type AuthUser } from "../auth.ts";
 
@@ -28,14 +22,8 @@ const createBody = z.object({
 
 const specimenSnapshots = async (ids: string[]) => {
   if (ids.length === 0) return new Map<string, Record<string, unknown>>();
-  const rows = await db
-    .select()
-    .from(specimens)
-    .where(inArray(specimens.id, ids));
-  const attrs = await db
-    .select()
-    .from(specimenAttrs)
-    .where(inArray(specimenAttrs.specimenId, ids));
+  const rows = await db.select().from(specimens).where(inArray(specimens.id, ids));
+  const attrs = await db.select().from(specimenAttrs).where(inArray(specimenAttrs.specimenId, ids));
   const attrsById = new Map<string, Record<string, string>>();
   for (const row of attrs) {
     const current = attrsById.get(row.specimenId) ?? {};
@@ -59,10 +47,7 @@ const specimenSnapshots = async (ids: string[]) => {
   );
 };
 
-const sendOrderConfirmation = async (
-  user: AuthUser,
-  order: typeof orders.$inferSelect,
-) => {
+const sendOrderConfirmation = async (user: AuthUser, order: typeof orders.$inferSelect) => {
   const payload = {
     to: user.email,
     reference: order.reference,
@@ -102,8 +87,7 @@ ordersRouter.post("/", async (c) => {
   const shippingCents = body.shippingCents ?? 0;
   const totalCents = subtotal + shippingCents;
   const paymentMethod = body.paymentMethod ?? "card";
-  const orderStatus =
-    paymentMethod === "card" ? "paid" : "pending_payment";
+  const orderStatus = paymentMethod === "card" ? "paid" : "pending_payment";
 
   const inserted = await db
     .insert(orders)

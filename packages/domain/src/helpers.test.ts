@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { cartSubtotal, cartTotal, formatPrice, validateEmail, validatePassword, validatePostal } from "./index.ts";
+import {
+  cartSubtotal,
+  cartTotal,
+  formatPrice,
+  validateEmail,
+  validatePassword,
+  validatePostal,
+} from "./index.ts";
 
 describe("domain helpers", () => {
   it("formats price values for display", () => {

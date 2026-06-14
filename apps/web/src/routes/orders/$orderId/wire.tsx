@@ -34,9 +34,9 @@ function WireInstructionsPage() {
           <CardBody className="space-y-6 p-10">
             <h1 className="font-display text-4xl text-brand-600">Wire Transfer Instructions</h1>
             <p className="text-sm text-ink-700 leading-relaxed">
-              Your order <strong>#{reference}</strong> is held in{" "}
-              <strong>pending_payment</strong> until funds clear. Use the details below and
-              include your order reference in the transfer memo.
+              Your order <strong>#{reference}</strong> is held in <strong>pending_payment</strong>{" "}
+              until funds clear. Use the details below and include your order reference in the
+              transfer memo.
             </p>
             <dl className="grid gap-3 text-sm rounded-md border border-ink-700/5 bg-surface-muted p-5">
               <div className="flex justify-between gap-4">

@@ -24,18 +24,13 @@ export const setQty = (
 export const removeItem = (items: ReadonlyArray<CartItem>, specimenId: string): CartItem[] =>
   items.filter((i) => i.specimenId !== specimenId);
 
-export const merge = (
-  a: ReadonlyArray<CartItem>,
-  b: ReadonlyArray<CartItem>,
-): CartItem[] => {
+export const merge = (a: ReadonlyArray<CartItem>, b: ReadonlyArray<CartItem>): CartItem[] => {
   const byId = new Map<string, CartItem>();
   for (const item of [...a, ...b]) {
     const existing = byId.get(item.specimenId);
     byId.set(
       item.specimenId,
-      existing
-        ? { ...existing, qty: existing.qty + item.qty }
-        : { ...item },
+      existing ? { ...existing, qty: existing.qty + item.qty } : { ...item },
     );
   }
   return [...byId.values()];

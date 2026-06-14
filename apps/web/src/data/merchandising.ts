@@ -1,16 +1,12 @@
 import { queryOptions } from "@tanstack/react-query";
-import {
-  normalizeSpecimen,
-  type SpecimenRow,
-} from "./specimens-query.ts";
+import { normalizeSpecimen, type SpecimenRow } from "./specimens-query.ts";
 import { apiOptional } from "../lib/api.ts";
 import type { Specimen } from "@rocksa/domain";
 
 export const fetchCollection = async (slug: string): Promise<Specimen[]> => {
-  const res = await apiOptional<{ items: SpecimenRow[] }>(
-    `/v1/collections/${slug}`,
-    { auth: false },
-  );
+  const res = await apiOptional<{ items: SpecimenRow[] }>(`/v1/collections/${slug}`, {
+    auth: false,
+  });
   return res ? res.items.map(normalizeSpecimen) : [];
 };
 
@@ -27,8 +23,7 @@ export const featuredDeal = (items: Specimen[]): Specimen | undefined => {
   );
   if (withCompare.length === 0) return items[0];
   return withCompare.sort(
-    (a, b) =>
-      (b.compareAtCents! - b.priceCents) - (a.compareAtCents! - a.priceCents),
+    (a, b) => b.compareAtCents! - b.priceCents - (a.compareAtCents! - a.priceCents),
   )[0];
 };
 

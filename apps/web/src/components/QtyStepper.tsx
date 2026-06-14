@@ -15,9 +15,7 @@ export const QtyStepper = ({ value, onChange, min = 1 }: Props) => (
     >
       −
     </button>
-    <span className="min-w-8 text-center text-sm font-medium text-ink-900">
-      {value}
-    </span>
+    <span className="min-w-8 text-center text-sm font-medium text-ink-900">{value}</span>
     <button
       type="button"
       aria-label="Increase quantity"

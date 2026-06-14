@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button, Card, CardBody } from "@rocksa/ui";
 import { useAuth } from "@rocksa/auth";
+import { storefrontMainClassName } from "../../lib/layout.ts";
 
 export const Route = createFileRoute("/account/")({ component: AccountHome });
 
@@ -8,7 +9,7 @@ function AccountHome() {
   const { user, profile } = useAuth();
 
   return (
-    <main className="flex-1 px-10 py-12">
+    <main className={storefrontMainClassName}>
       <h1 className="font-display text-5xl">Account</h1>
       <p className="mt-2 text-ink-500">Manage your profile, orders, and saved addresses.</p>
 

@@ -19,18 +19,9 @@ export const filterSpecimens = (
     if (filters.category && s.category !== filters.category) return false;
     if (filters.subcategory && s.subcategory !== filters.subcategory) return false;
     if (filters.color && s.attributes["Color"] !== filters.color) return false;
-    if (filters.clarity && s.attributes["Clarity"] !== filters.clarity)
-      return false;
-    if (
-      filters.minPriceCents !== undefined &&
-      s.priceCents < filters.minPriceCents
-    )
-      return false;
-    if (
-      filters.maxPriceCents !== undefined &&
-      s.priceCents > filters.maxPriceCents
-    )
-      return false;
+    if (filters.clarity && s.attributes["Clarity"] !== filters.clarity) return false;
+    if (filters.minPriceCents !== undefined && s.priceCents < filters.minPriceCents) return false;
+    if (filters.maxPriceCents !== undefined && s.priceCents > filters.maxPriceCents) return false;
     return true;
   });
 
@@ -59,10 +50,7 @@ export const applyListing = (
   sort: ListingSort = "newest",
 ): Specimen[] => sortSpecimens(filterSpecimens(items, filters), sort);
 
-export const searchSpecimens = (
-  items: ReadonlyArray<Specimen>,
-  query: string,
-): Specimen[] => {
+export const searchSpecimens = (items: ReadonlyArray<Specimen>, query: string): Specimen[] => {
   const q = query.trim().toLowerCase();
   if (!q) return [];
   return items.filter((s) => {
@@ -74,10 +62,7 @@ export const searchSpecimens = (
   });
 };
 
-export const attributeValues = (
-  items: ReadonlyArray<Specimen>,
-  key: string,
-): string[] =>
+export const attributeValues = (items: ReadonlyArray<Specimen>, key: string): string[] =>
   Array.from(
     new Set(
       items

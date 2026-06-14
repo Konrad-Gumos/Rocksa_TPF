@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button, Card, CardBody } from "@rocksa/ui";
-import { useSpecimens } from "../../data/api-specimens.ts";
+import { useSpecimens } from "../../data/specimens-query.ts";
 import { useWishlist } from "../../state/wishlist.tsx";
 import { ProductCard } from "../../components/ProductCard.tsx";
+import { storefrontMainClassName } from "../../lib/layout.ts";
 
 export const Route = createFileRoute("/account/collection")({ component: MyCollection });
 
@@ -12,7 +13,7 @@ function MyCollection() {
   const saved = all.filter((s) => ids.includes(s.id));
 
   return (
-    <main className="flex-1 px-10 py-12">
+    <main className={storefrontMainClassName}>
       <h1 className="font-display text-5xl">My Collection</h1>
       <p className="mt-2 text-ink-500">Specimens you have saved for later.</p>
 

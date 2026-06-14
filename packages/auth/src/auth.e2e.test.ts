@@ -1,10 +1,4 @@
-import {
-  afterAll,
-  beforeAll,
-  describe,
-  expect,
-  it,
-} from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
   connectAuthEmulator,
   createUserWithEmailAndPassword,
@@ -51,20 +45,20 @@ describeIfNotCI("auth happy path (Firebase emulator)", () => {
       );
     }
     if (!(await apiReachable())) {
-      throw new Error(
-        `API not running at ${API} — start with: bun run api`,
-      );
+      throw new Error(`API not running at ${API} — start with: bun run api`);
     }
 
     process.env["FIREBASE_AUTH_EMULATOR_HOST"] = "127.0.0.1:9099";
     process.env["VITE_API_URL"] = API;
 
-    app = getApps()[0] ?? initializeApp({
-      apiKey: "demo-api-key",
-      authDomain: "demo.firebaseapp.com",
-      projectId: "rocksa-dev",
-      appId: "demo-app-id",
-    });
+    app =
+      getApps()[0] ??
+      initializeApp({
+        apiKey: "demo-api-key",
+        authDomain: "demo.firebaseapp.com",
+        projectId: "rocksa-dev",
+        appId: "demo-app-id",
+      });
     const auth = getAuth(app);
     connectAuthEmulator(auth, EMULATOR, { disableWarnings: true });
   });

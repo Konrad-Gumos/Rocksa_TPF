@@ -7,10 +7,7 @@ export const specimensRouter = new Hono();
 
 const attrsBySpecimenId = async (ids: string[]) => {
   if (ids.length === 0) return new Map<string, Record<string, string>>();
-  const rows = await db
-    .select()
-    .from(specimenAttrs)
-    .where(inArray(specimenAttrs.specimenId, ids));
+  const rows = await db.select().from(specimenAttrs).where(inArray(specimenAttrs.specimenId, ids));
   const map = new Map<string, Record<string, string>>();
   for (const row of rows) {
     const attrs = map.get(row.specimenId) ?? {};
@@ -20,9 +17,7 @@ const attrsBySpecimenId = async (ids: string[]) => {
   return map;
 };
 
-const withAttributes = async (
-  rows: (typeof specimens.$inferSelect)[],
-) => {
+const withAttributes = async (rows: (typeof specimens.$inferSelect)[]) => {
   const attrs = await attrsBySpecimenId(rows.map((r) => r.id));
   return rows.map((row) => ({
     ...row,

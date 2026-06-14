@@ -21,11 +21,7 @@ import {
   type User,
 } from "firebase/auth";
 import { firebaseAuth } from "./firebase.ts";
-import {
-  syncSession,
-  type SessionProfile,
-  type SyncOptions,
-} from "./sync.ts";
+import { syncSession, type SessionProfile, type SyncOptions } from "./sync.ts";
 
 export type AuthStatus = "loading" | "authed" | "anon";
 
@@ -117,9 +113,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       getIdToken: async () => (user ? user.getIdToken() : null),
       signIn: async (email, password) => {
         return withBootstrap(() =>
-          signInWithEmailAndPassword(firebaseAuth, email, password).then(
-            (c) => c.user,
-          ),
+          signInWithEmailAndPassword(firebaseAuth, email, password).then((c) => c.user),
         );
       },
       signUp: async (email, password, fullName, options) => {
@@ -128,11 +122,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           fullName: fullName ?? null,
         };
         return withBootstrap(async () => {
-          const cred = await createUserWithEmailAndPassword(
-            firebaseAuth,
-            email,
-            password,
-          );
+          const cred = await createUserWithEmailAndPassword(firebaseAuth, email, password);
           if (fullName) await updateProfile(cred.user, { displayName: fullName });
           return cred.user;
         }, syncOpts);
@@ -145,16 +135,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       },
       signInWithGoogle: async () => {
         return withBootstrap(() =>
-          signInWithPopup(firebaseAuth, new GoogleAuthProvider()).then(
-            (c) => c.user,
-          ),
+          signInWithPopup(firebaseAuth, new GoogleAuthProvider()).then((c) => c.user),
         );
       },
       signInWithApple: async () => {
         return withBootstrap(() =>
-          signInWithPopup(firebaseAuth, new OAuthProvider("apple.com")).then(
-            (c) => c.user,
-          ),
+          signInWithPopup(firebaseAuth, new OAuthProvider("apple.com")).then((c) => c.user),
         );
       },
     };

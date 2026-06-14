@@ -8,11 +8,7 @@ interface Props {
   children: ReactNode;
 }
 
-export const RequireAuth = ({
-  roles,
-  fallbackTo = "/auth/login",
-  children,
-}: Props) => {
+export const RequireAuth = ({ roles, fallbackTo = "/auth/login", children }: Props) => {
   const { status, profile } = useAuth();
 
   if (status === "loading") {

@@ -1,18 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import {
-  Badge,
-  Button,
-  Card,
-  CardBody,
-  Dialog,
-  DialogContent,
-  Input,
-  Label,
-} from "@rocksa/ui";
+import { Badge, Button, Card, CardBody, Dialog, DialogContent, Input, Label } from "@rocksa/ui";
 import { formatPrice } from "@rocksa/domain";
-import { useSpecimens } from "../../data/api-specimens.ts";
+import { useSpecimens } from "../../data/specimens-query.ts";
 import { createSpecimen, type NewSpecimenInput } from "../../data/api-workspace.ts";
 import { PlusIcon } from "../../components/Icons.tsx";
 
@@ -49,7 +40,7 @@ function Inventory() {
   });
 
   return (
-    <div className="p-10">
+    <div>
       <div className="flex items-start justify-between">
         <div>
           <h1 className="font-display text-5xl">Inventory</h1>

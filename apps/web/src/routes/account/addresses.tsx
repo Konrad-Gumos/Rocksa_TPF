@@ -9,6 +9,7 @@ import {
   fetchAddresses,
   type AddressInput,
 } from "../../data/api-addresses.ts";
+import { storefrontMainClassName } from "../../lib/layout.ts";
 
 export const Route = createFileRoute("/account/addresses")({ component: AccountAddresses });
 
@@ -53,7 +54,7 @@ function AccountAddresses() {
   });
 
   return (
-    <main className="flex-1 px-10 py-12">
+    <main className={storefrontMainClassName}>
       <div className="flex items-end justify-between">
         <div>
           <h1 className="font-display text-5xl">Addresses</h1>
@@ -100,10 +101,7 @@ function AccountAddresses() {
               <Input {...field("phone")} />
             </div>
             <div className="sm:col-span-2">
-              <Button
-                onClick={() => addMutation.mutate(form)}
-                disabled={addMutation.isPending}
-              >
+              <Button onClick={() => addMutation.mutate(form)} disabled={addMutation.isPending}>
                 Save address
               </Button>
             </div>
@@ -133,11 +131,7 @@ function AccountAddresses() {
                       {lines.country}
                     </p>
                   </div>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => removeMutation.mutate(a.id)}
-                  >
+                  <Button size="sm" variant="secondary" onClick={() => removeMutation.mutate(a.id)}>
                     Remove
                   </Button>
                 </CardBody>

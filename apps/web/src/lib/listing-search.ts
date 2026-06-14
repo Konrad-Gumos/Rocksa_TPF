@@ -13,14 +13,10 @@ export interface ListingLocationState {
   listingSearch?: ListingSearch;
 }
 
-export const parseListingSearch = (
-  search: Record<string, unknown>,
-): ListingSearch => ({
+export const parseListingSearch = (search: Record<string, unknown>): ListingSearch => ({
   sub: typeof search["sub"] === "string" ? search["sub"] : undefined,
   sort:
-    search["sort"] === "price-asc" ||
-    search["sort"] === "price-desc" ||
-    search["sort"] === "newest"
+    search["sort"] === "price-asc" || search["sort"] === "price-desc" || search["sort"] === "newest"
       ? search["sort"]
       : undefined,
   minPrice:
@@ -32,6 +28,29 @@ export const parseListingSearch = (
       ? Number(search["maxPrice"])
       : undefined,
   color: typeof search["color"] === "string" ? search["color"] : undefined,
-  clarity:
-    typeof search["clarity"] === "string" ? search["clarity"] : undefined,
+  clarity: typeof search["clarity"] === "string" ? search["clarity"] : undefined,
 });
+
+/** Merge listing search updates and drop cleared (`undefined`) fields from the URL. */
+export const mergeListingSearch = (
+  prev: ListingSearch,
+  next: Partial<ListingSearch>,
+): ListingSearch => {
+  const merged: ListingSearch = { ...prev, ...next };
+  for (const key of Object.keys(next) as (keyof ListingSearch)[]) {
+    if (next[key] === undefined) {
+      delete merged[key];
+    }
+  }
+  return merged;
+};
+
+export const listingSearchKey = (search: ListingSearch) =>
+  [
+    search.sort ?? "newest",
+    search.sub ?? "",
+    search.color ?? "",
+    search.clarity ?? "",
+    search.minPrice ?? "",
+    search.maxPrice ?? "",
+  ].join("|");

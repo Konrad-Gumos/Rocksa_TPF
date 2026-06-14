@@ -70,9 +70,7 @@ const OrderContext = createContext<OrderContextValue | null>(null);
 export const OrderProvider = ({ children }: { children: ReactNode }) => {
   const { user, status } = useAuth();
   const [info, setInfoState] = useState<CheckoutInfo>(() => readStoredCheckoutInfo());
-  const [payment, setPaymentState] = useState<PaymentInfo>(() =>
-    readStoredPaymentInfo(),
-  );
+  const [payment, setPaymentState] = useState<PaymentInfo>(() => readStoredPaymentInfo());
   const [lastOrder, setLastOrder] = useState<Order | null>(null);
 
   useEffect(() => {
