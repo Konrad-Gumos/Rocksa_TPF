@@ -2,9 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button, Card, CardBody, Separator } from "@rocksa/ui";
 import { formatPrice, type Specimen } from "@rocksa/domain";
 import { useCart } from "@rocksa/cart";
-import { useSpecimenLookup } from "../data/api-specimens.ts";
+import { useSpecimenLookup, useSpecimens } from "../data/api-specimens.ts";
 import { ArrowRightIcon, CloseIcon, LockIcon } from "../components/Icons.tsx";
 import { TopNav } from "../components/TopNav.tsx";
+import { EmptyStateSuggestions } from "../components/EmptyStateSuggestions.tsx";
 import { QtyStepper } from "../components/QtyStepper.tsx";
 import { cartAttributeRows } from "../lib/cart-attributes.ts";
 
@@ -13,7 +14,9 @@ export const Route = createFileRoute("/cart")({ component: CartPage });
 function CartPage() {
   const { items, subtotal, total, setQty, remove } = useCart();
   const findSpecimenById = useSpecimenLookup();
+  const allSpecimens = useSpecimens();
   const count = items.reduce((n, i) => n + i.qty, 0);
+  const suggestions = (allSpecimens.data ?? []).slice(0, 4);
 
   return (
     <div className="min-h-screen">
@@ -29,11 +32,12 @@ function CartPage() {
           <div className="space-y-4">
             {items.length === 0 && (
               <Card>
-                <CardBody className="text-center py-12">
+                <CardBody className="space-y-8 py-12 text-center">
                   <p className="text-ink-500">Your cart is empty.</p>
-                  <Button asChild className="mt-4" variant="secondary">
+                  <Button asChild variant="secondary">
                     <Link to="/">Explore the collection</Link>
                   </Button>
+                  <EmptyStateSuggestions specimens={suggestions} />
                 </CardBody>
               </Card>
             )}

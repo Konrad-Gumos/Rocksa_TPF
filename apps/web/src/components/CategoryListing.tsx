@@ -20,6 +20,7 @@ import {
 import { TopNav } from "./TopNav.tsx";
 import { CategorySidebar } from "./CategorySidebar.tsx";
 import { ProductCard } from "./ProductCard.tsx";
+import { EmptyStateSuggestions } from "./EmptyStateSuggestions.tsx";
 import { useSpecimens } from "../data/api-specimens.ts";
 import type { ListingSearch } from "../lib/listing-search.ts";
 
@@ -256,9 +257,16 @@ export const CategoryListing = ({ category, search, inert = false }: Props) => {
                     />
                   ))}
               {!isLoading && items.length === 0 && (
-                <p className="col-span-full rounded-md border border-dashed border-ink-700/10 bg-white p-10 text-center text-ink-500">
-                  No specimens match these filters.
-                </p>
+                <div className="col-span-full space-y-8 rounded-md border border-dashed border-ink-700/10 bg-white p-10">
+                  <p className="text-center text-ink-500">
+                    No specimens match these filters.
+                  </p>
+                  <EmptyStateSuggestions
+                    specimens={inCategory.slice(0, 4)}
+                    heading="Trending in this category"
+                    categories={[]}
+                  />
+                </div>
               )}
             </div>
           </div>

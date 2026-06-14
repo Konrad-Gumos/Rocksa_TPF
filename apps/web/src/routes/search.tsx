@@ -4,6 +4,7 @@ import { Button, Card, CardBody } from "@rocksa/ui";
 import { searchSpecimens } from "@rocksa/domain";
 import { TopNav } from "../components/TopNav.tsx";
 import { ProductCard } from "../components/ProductCard.tsx";
+import { EmptyStateSuggestions } from "../components/EmptyStateSuggestions.tsx";
 import { useSpecimens } from "../data/api-specimens.ts";
 import { specimensQueryOptions } from "../data/specimens-query.ts";
 
@@ -48,14 +49,17 @@ function SearchPage() {
         )}
 
         {q && !isLoading && results.length === 0 && (
-          <Card className="mt-10">
-            <CardBody className="space-y-4 py-12 text-center">
-              <p className="text-ink-500">No specimens match “{q}”.</p>
-              <Button asChild variant="secondary">
-                <Link to="/">Browse all collections</Link>
-              </Button>
-            </CardBody>
-          </Card>
+          <div className="mt-10 space-y-8">
+            <Card>
+              <CardBody className="space-y-4 py-12 text-center">
+                <p className="text-ink-500">No specimens match “{q}”.</p>
+                <Button asChild variant="secondary">
+                  <Link to="/">Browse all collections</Link>
+                </Button>
+              </CardBody>
+            </Card>
+            <EmptyStateSuggestions specimens={all.slice(0, 4)} />
+          </div>
         )}
 
         {results.length > 0 && (
