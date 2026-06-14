@@ -10,12 +10,15 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as InvestmentRouteImport } from './routes/investment'
+import { Route as CustomDesignRouteImport } from './routes/custom-design'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as WorkspaceRouteRouteImport } from './routes/workspace/route'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AccountRouteRouteImport } from './routes/account/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorkspaceIndexRouteImport } from './routes/workspace/index'
+import { Route as JournalIndexRouteImport } from './routes/journal/index'
 import { Route as CheckoutIndexRouteImport } from './routes/checkout/index'
 import { Route as AccountIndexRouteImport } from './routes/account/index'
 import { Route as WorkspaceReportsRouteImport } from './routes/workspace/reports'
@@ -24,6 +27,7 @@ import { Route as WorkspaceInventoryRouteImport } from './routes/workspace/inven
 import { Route as WorkspaceAnalyticsRouteImport } from './routes/workspace/analytics'
 import { Route as WorkspaceAcquisitionsRouteImport } from './routes/workspace/acquisitions'
 import { Route as OrdersOrderIdRouteImport } from './routes/orders/$orderId'
+import { Route as JournalSlugRouteImport } from './routes/journal/$slug'
 import { Route as CheckoutReviewRouteImport } from './routes/checkout/review'
 import { Route as CheckoutPaymentRouteImport } from './routes/checkout/payment'
 import { Route as AuthResetRouteImport } from './routes/auth/reset'
@@ -40,6 +44,16 @@ import { Route as CCategoryPSlugRouteImport } from './routes/c/$category/p/$slug
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InvestmentRoute = InvestmentRouteImport.update({
+  id: '/investment',
+  path: '/investment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CustomDesignRoute = CustomDesignRouteImport.update({
+  id: '/custom-design',
+  path: '/custom-design',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CartRoute = CartRouteImport.update({
@@ -71,6 +85,11 @@ const WorkspaceIndexRoute = WorkspaceIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => WorkspaceRouteRoute,
+} as any)
+const JournalIndexRoute = JournalIndexRouteImport.update({
+  id: '/journal/',
+  path: '/journal/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutIndexRoute = CheckoutIndexRouteImport.update({
   id: '/checkout/',
@@ -110,6 +129,11 @@ const WorkspaceAcquisitionsRoute = WorkspaceAcquisitionsRouteImport.update({
 const OrdersOrderIdRoute = OrdersOrderIdRouteImport.update({
   id: '/orders/$orderId',
   path: '/orders/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JournalSlugRoute = JournalSlugRouteImport.update({
+  id: '/journal/$slug',
+  path: '/journal/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutReviewRoute = CheckoutReviewRouteImport.update({
@@ -179,6 +203,8 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
   '/workspace': typeof WorkspaceRouteRouteWithChildren
   '/cart': typeof CartRoute
+  '/custom-design': typeof CustomDesignRoute
+  '/investment': typeof InvestmentRoute
   '/search': typeof SearchRoute
   '/components': typeof DevComponentsRoute
   '/account/addresses': typeof AccountAddressesRoute
@@ -189,6 +215,7 @@ export interface FileRoutesByFullPath {
   '/auth/reset': typeof AuthResetRoute
   '/checkout/payment': typeof CheckoutPaymentRoute
   '/checkout/review': typeof CheckoutReviewRoute
+  '/journal/$slug': typeof JournalSlugRoute
   '/orders/$orderId': typeof OrdersOrderIdRouteWithChildren
   '/workspace/acquisitions': typeof WorkspaceAcquisitionsRoute
   '/workspace/analytics': typeof WorkspaceAnalyticsRoute
@@ -197,6 +224,7 @@ export interface FileRoutesByFullPath {
   '/workspace/reports': typeof WorkspaceReportsRoute
   '/account/': typeof AccountIndexRoute
   '/checkout/': typeof CheckoutIndexRoute
+  '/journal/': typeof JournalIndexRoute
   '/workspace/': typeof WorkspaceIndexRoute
   '/orders/$orderId/wire': typeof OrdersOrderIdWireRoute
   '/c/$category/': typeof CCategoryIndexRoute
@@ -206,6 +234,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
   '/cart': typeof CartRoute
+  '/custom-design': typeof CustomDesignRoute
+  '/investment': typeof InvestmentRoute
   '/search': typeof SearchRoute
   '/components': typeof DevComponentsRoute
   '/account/addresses': typeof AccountAddressesRoute
@@ -216,6 +246,7 @@ export interface FileRoutesByTo {
   '/auth/reset': typeof AuthResetRoute
   '/checkout/payment': typeof CheckoutPaymentRoute
   '/checkout/review': typeof CheckoutReviewRoute
+  '/journal/$slug': typeof JournalSlugRoute
   '/orders/$orderId': typeof OrdersOrderIdRouteWithChildren
   '/workspace/acquisitions': typeof WorkspaceAcquisitionsRoute
   '/workspace/analytics': typeof WorkspaceAnalyticsRoute
@@ -224,6 +255,7 @@ export interface FileRoutesByTo {
   '/workspace/reports': typeof WorkspaceReportsRoute
   '/account': typeof AccountIndexRoute
   '/checkout': typeof CheckoutIndexRoute
+  '/journal': typeof JournalIndexRoute
   '/workspace': typeof WorkspaceIndexRoute
   '/orders/$orderId/wire': typeof OrdersOrderIdWireRoute
   '/c/$category': typeof CCategoryIndexRoute
@@ -236,6 +268,8 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteRouteWithChildren
   '/workspace': typeof WorkspaceRouteRouteWithChildren
   '/cart': typeof CartRoute
+  '/custom-design': typeof CustomDesignRoute
+  '/investment': typeof InvestmentRoute
   '/search': typeof SearchRoute
   '/_dev/components': typeof DevComponentsRoute
   '/account/addresses': typeof AccountAddressesRoute
@@ -246,6 +280,7 @@ export interface FileRoutesById {
   '/auth/reset': typeof AuthResetRoute
   '/checkout/payment': typeof CheckoutPaymentRoute
   '/checkout/review': typeof CheckoutReviewRoute
+  '/journal/$slug': typeof JournalSlugRoute
   '/orders/$orderId': typeof OrdersOrderIdRouteWithChildren
   '/workspace/acquisitions': typeof WorkspaceAcquisitionsRoute
   '/workspace/analytics': typeof WorkspaceAnalyticsRoute
@@ -254,6 +289,7 @@ export interface FileRoutesById {
   '/workspace/reports': typeof WorkspaceReportsRoute
   '/account/': typeof AccountIndexRoute
   '/checkout/': typeof CheckoutIndexRoute
+  '/journal/': typeof JournalIndexRoute
   '/workspace/': typeof WorkspaceIndexRoute
   '/orders/$orderId/wire': typeof OrdersOrderIdWireRoute
   '/c/$category/': typeof CCategoryIndexRoute
@@ -267,6 +303,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/workspace'
     | '/cart'
+    | '/custom-design'
+    | '/investment'
     | '/search'
     | '/components'
     | '/account/addresses'
@@ -277,6 +315,7 @@ export interface FileRouteTypes {
     | '/auth/reset'
     | '/checkout/payment'
     | '/checkout/review'
+    | '/journal/$slug'
     | '/orders/$orderId'
     | '/workspace/acquisitions'
     | '/workspace/analytics'
@@ -285,6 +324,7 @@ export interface FileRouteTypes {
     | '/workspace/reports'
     | '/account/'
     | '/checkout/'
+    | '/journal/'
     | '/workspace/'
     | '/orders/$orderId/wire'
     | '/c/$category/'
@@ -294,6 +334,8 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/cart'
+    | '/custom-design'
+    | '/investment'
     | '/search'
     | '/components'
     | '/account/addresses'
@@ -304,6 +346,7 @@ export interface FileRouteTypes {
     | '/auth/reset'
     | '/checkout/payment'
     | '/checkout/review'
+    | '/journal/$slug'
     | '/orders/$orderId'
     | '/workspace/acquisitions'
     | '/workspace/analytics'
@@ -312,6 +355,7 @@ export interface FileRouteTypes {
     | '/workspace/reports'
     | '/account'
     | '/checkout'
+    | '/journal'
     | '/workspace'
     | '/orders/$orderId/wire'
     | '/c/$category'
@@ -323,6 +367,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/workspace'
     | '/cart'
+    | '/custom-design'
+    | '/investment'
     | '/search'
     | '/_dev/components'
     | '/account/addresses'
@@ -333,6 +379,7 @@ export interface FileRouteTypes {
     | '/auth/reset'
     | '/checkout/payment'
     | '/checkout/review'
+    | '/journal/$slug'
     | '/orders/$orderId'
     | '/workspace/acquisitions'
     | '/workspace/analytics'
@@ -341,6 +388,7 @@ export interface FileRouteTypes {
     | '/workspace/reports'
     | '/account/'
     | '/checkout/'
+    | '/journal/'
     | '/workspace/'
     | '/orders/$orderId/wire'
     | '/c/$category/'
@@ -353,12 +401,16 @@ export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   WorkspaceRouteRoute: typeof WorkspaceRouteRouteWithChildren
   CartRoute: typeof CartRoute
+  CustomDesignRoute: typeof CustomDesignRoute
+  InvestmentRoute: typeof InvestmentRoute
   SearchRoute: typeof SearchRoute
   DevComponentsRoute: typeof DevComponentsRoute
   CheckoutPaymentRoute: typeof CheckoutPaymentRoute
   CheckoutReviewRoute: typeof CheckoutReviewRoute
+  JournalSlugRoute: typeof JournalSlugRoute
   OrdersOrderIdRoute: typeof OrdersOrderIdRouteWithChildren
   CheckoutIndexRoute: typeof CheckoutIndexRoute
+  JournalIndexRoute: typeof JournalIndexRoute
   CCategoryIndexRoute: typeof CCategoryIndexRoute
   CCategoryPSlugRoute: typeof CCategoryPSlugRoute
 }
@@ -370,6 +422,20 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/investment': {
+      id: '/investment'
+      path: '/investment'
+      fullPath: '/investment'
+      preLoaderRoute: typeof InvestmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/custom-design': {
+      id: '/custom-design'
+      path: '/custom-design'
+      fullPath: '/custom-design'
+      preLoaderRoute: typeof CustomDesignRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cart': {
@@ -413,6 +479,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/workspace/'
       preLoaderRoute: typeof WorkspaceIndexRouteImport
       parentRoute: typeof WorkspaceRouteRoute
+    }
+    '/journal/': {
+      id: '/journal/'
+      path: '/journal'
+      fullPath: '/journal/'
+      preLoaderRoute: typeof JournalIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/checkout/': {
       id: '/checkout/'
@@ -468,6 +541,13 @@ declare module '@tanstack/react-router' {
       path: '/orders/$orderId'
       fullPath: '/orders/$orderId'
       preLoaderRoute: typeof OrdersOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journal/$slug': {
+      id: '/journal/$slug'
+      path: '/journal/$slug'
+      fullPath: '/journal/$slug'
+      preLoaderRoute: typeof JournalSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout/review': {
@@ -631,12 +711,16 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
   WorkspaceRouteRoute: WorkspaceRouteRouteWithChildren,
   CartRoute: CartRoute,
+  CustomDesignRoute: CustomDesignRoute,
+  InvestmentRoute: InvestmentRoute,
   SearchRoute: SearchRoute,
   DevComponentsRoute: DevComponentsRoute,
   CheckoutPaymentRoute: CheckoutPaymentRoute,
   CheckoutReviewRoute: CheckoutReviewRoute,
+  JournalSlugRoute: JournalSlugRoute,
   OrdersOrderIdRoute: OrdersOrderIdRouteWithChildren,
   CheckoutIndexRoute: CheckoutIndexRoute,
+  JournalIndexRoute: JournalIndexRoute,
   CCategoryIndexRoute: CCategoryIndexRoute,
   CCategoryPSlugRoute: CCategoryPSlugRoute,
 }

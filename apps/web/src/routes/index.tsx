@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Badge, Button, Card, CardBody } from "@rocksa/ui";
 import { formatPrice } from "@rocksa/domain";
 import { TopNav } from "../components/TopNav.tsx";
+import { PageMeta } from "../components/PageMeta.tsx";
 import { CategorySidebar } from "../components/CategorySidebar.tsx";
 import { ProductCard } from "../components/ProductCard.tsx";
 import { ArrowRightIcon } from "../components/Icons.tsx";
@@ -34,6 +35,10 @@ function Landing() {
 
   return (
     <div>
+      <PageMeta
+        title="Rocksa — Curated Mineral Collection"
+        description="Discover exceptional gemstones and minerals with provenance, certification, and secure checkout."
+      />
       <TopNav />
       <div className="flex">
         <CategorySidebar
@@ -100,9 +105,9 @@ function Landing() {
                     crystalline structure across the latest batch of South
                     American imports.
                   </p>
-                  <a className="mt-3 inline-block text-sm font-medium text-brand-600">
+                  <Link to="/journal" className="mt-3 inline-block text-sm font-medium text-brand-600">
                     READ FULL REPORT
-                  </a>
+                  </Link>
                 </CardBody>
               </Card>
               <Card>
@@ -112,9 +117,9 @@ function Landing() {
                     Track market values and historical data for premium mineral
                     acquisitions within your workspace.
                   </p>
-                  <a className="mt-3 inline-block text-sm font-medium text-brand-600">
+                  <Link to="/investment" className="mt-3 inline-block text-sm font-medium text-brand-600">
                     VIEW METRICS
-                  </a>
+                  </Link>
                 </CardBody>
               </Card>
             </div>

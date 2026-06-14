@@ -9,6 +9,7 @@ import { meRouter } from "./routes/me.ts";
 import { collectionsRouter } from "./routes/collections.ts";
 import { addressesRouter } from "./routes/addresses.ts";
 import { workspaceRouter } from "./routes/workspace.ts";
+import { inquiriesRouter } from "./routes/inquiries.ts";
 
 const app = new Hono();
 
@@ -38,6 +39,7 @@ app.route("/v1/me", meRouter);
 app.route("/v1/collections", collectionsRouter);
 app.route("/v1/addresses", addressesRouter);
 app.route("/v1/workspace", workspaceRouter);
+app.route("/v1/inquiries", inquiriesRouter);
 
 console.log(`api listening on http://localhost:${env.PORT}`);
 

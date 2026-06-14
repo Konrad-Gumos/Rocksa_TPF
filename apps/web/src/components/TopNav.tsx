@@ -11,9 +11,9 @@ interface Props {
 
 const NAV_LINKS = [
   { label: "Collections", to: "/" as const },
-  { label: "Custom Design", href: "#" },
-  { label: "Investment", href: "#" },
-  { label: "Journal", href: "#" },
+  { label: "Custom Design", to: "/custom-design" as const },
+  { label: "Investment", to: "/investment" as const },
+  { label: "Journal", to: "/journal" as const },
 ] as const;
 
 export const TopNav = ({ variant = "full" }: Props) => {
@@ -64,17 +64,11 @@ export const TopNav = ({ variant = "full" }: Props) => {
         </Link>
 
         <nav className="hidden items-center gap-8 font-display text-lg md:flex">
-          {NAV_LINKS.map((link) =>
-            "to" in link ? (
-              <Link key={link.label} to={link.to} className="text-ink-900">
-                {link.label}
-              </Link>
-            ) : (
-              <a key={link.label} href={link.href} className="text-ink-500">
-                {link.label}
-              </a>
-            ),
-          )}
+          {NAV_LINKS.map((link) => (
+            <Link key={link.label} to={link.to} className="text-ink-900">
+              {link.label}
+            </Link>
+          ))}
         </nav>
 
         <form
