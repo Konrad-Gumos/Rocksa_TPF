@@ -8,7 +8,7 @@ import {
   DialogContent,
   Separator,
 } from "@rocksa/ui";
-import { formatPrice } from "@rocksa/domain";
+import { formatPrice, isPurchasable } from "@rocksa/domain";
 import { useSpecimen } from "../../../../data/api-specimens.ts";
 import {
   CloseIcon,
@@ -111,7 +111,11 @@ function ProductRoute() {
         </p>
         <Separator />
         <div className="flex gap-3">
-          <Button className="flex-1" onClick={() => add(specimen)}>
+          <Button
+            className="flex-1"
+            disabled={!isPurchasable(specimen.stockStatus)}
+            onClick={() => add(specimen)}
+          >
             <ShieldIcon className="h-4 w-4" /> Add to Collection
           </Button>
           <Button variant="secondary">

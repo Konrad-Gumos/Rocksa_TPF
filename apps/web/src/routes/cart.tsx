@@ -4,7 +4,7 @@ import { formatPrice, type Specimen } from "@rocksa/domain";
 import { useCart } from "@rocksa/cart";
 import { useSpecimenLookup } from "../data/api-specimens.ts";
 import { ArrowRightIcon, CloseIcon, LockIcon } from "../components/Icons.tsx";
-import { StorefrontNav } from "../components/StorefrontNav.tsx";
+import { TopNav } from "../components/TopNav.tsx";
 import { QtyStepper } from "../components/QtyStepper.tsx";
 import { cartAttributeRows } from "../lib/cart-attributes.ts";
 
@@ -17,7 +17,7 @@ function CartPage() {
 
   return (
     <div className="min-h-screen">
-      <StorefrontNav />
+      <TopNav />
 
       <main className="mx-auto max-w-[1200px] px-6 py-12">
         <h1 className="font-display text-5xl">Your Cart</h1>

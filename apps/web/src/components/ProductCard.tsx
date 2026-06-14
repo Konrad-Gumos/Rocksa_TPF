@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Badge } from "@rocksa/ui";
-import { formatPrice, type Specimen } from "@rocksa/domain";
+import { formatPrice, isPurchasable, type Specimen } from "@rocksa/domain";
 import { PlusIcon, StarIcon } from "./Icons.tsx";
 import { useCart } from "@rocksa/cart";
 import { saveListingScroll } from "../lib/listing-scroll.ts";
@@ -20,6 +20,7 @@ export const ProductCard = ({
   listingSearch,
 }: Props) => {
   const { add } = useCart();
+  const purchasable = isPurchasable(specimen.stockStatus);
 
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-md border border-ink-700/5 bg-white">
@@ -67,9 +68,14 @@ export const ProductCard = ({
           </div>
           <button
             type="button"
-            onClick={() => add(specimen)}
-            aria-label={`Add ${specimen.name} to cart`}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-brand-200 text-brand-600 hover:bg-brand-50"
+            onClick={() => purchasable && add(specimen)}
+            disabled={!purchasable}
+            aria-label={
+              purchasable
+                ? `Add ${specimen.name} to cart`
+                : `${specimen.name} is not available for purchase`
+            }
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-brand-200 text-brand-600 hover:bg-brand-50 disabled:cursor-not-allowed disabled:border-ink-700/10 disabled:text-ink-400 disabled:hover:bg-transparent"
           >
             <PlusIcon className="h-4 w-4" />
           </button>

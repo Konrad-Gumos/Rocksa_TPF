@@ -4,3 +4,4 @@ export * from "./sync.ts";
 export * from "./AuthProvider.tsx";
 export * from "./RequireAuth.tsx";
 export * from "./RedirectIfAuthed.tsx";
+export * from "./routes.ts";
