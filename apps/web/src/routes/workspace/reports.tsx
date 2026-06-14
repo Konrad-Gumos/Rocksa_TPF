@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Button, Card, CardBody, Separator } from "@rocksa/ui";
 import { ArrowRightIcon, DocIcon, PlusIcon, VaultIcon } from "../../components/Icons.tsx";
+import { downloadInventoryReport } from "../../data/api-workspace.ts";
 
 export const Route = createFileRoute("/workspace/reports")({ component: Reports });
 
@@ -53,7 +54,13 @@ function Reports() {
                 <Separator />
                 <div className="flex items-center justify-between">
                   <p className="text-xs uppercase tracking-wider text-brand-600">{g.eta}</p>
-                  <button className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-brand-600 text-white">
+                  <button
+                    type="button"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-brand-600 text-white"
+                    onClick={() => {
+                      if (g.title === "Inventory Audit") void downloadInventoryReport();
+                    }}
+                  >
                     <ArrowRightIcon className="h-4 w-4" />
                   </button>
                 </div>

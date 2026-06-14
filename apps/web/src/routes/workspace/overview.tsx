@@ -1,51 +1,44 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Badge, Card, CardBody } from "@rocksa/ui";
+import { formatPrice } from "@rocksa/domain";
 import { TruckIcon, VaultIcon, DiamondIcon } from "../../components/Icons.tsx";
+import { fetchWorkspaceOverview } from "../../data/api-workspace.ts";
 
 export const Route = createFileRoute("/workspace/overview")({ component: Overview });
 
 const STAT_ICONS = [VaultIcon, DiamondIcon, TruckIcon] as const;
 
-const STATS = [
-  { label: "Total Acquisitions", value: "1,248", hint: "+12 this month", hintTone: "ink" as const },
-  { label: "Collection Value", value: "$4.2M", hint: "Estimated", hintTone: "ink" as const },
-  { label: "Pending Shipments", value: "7", hint: "2 delayed", hintTone: "danger" as const },
-];
-
-const SHIPMENTS = [
-  {
-    icon: "💎",
-    name: "Amethyst Geode Cluster",
-    origin: "Uruguay",
-    status: "In Transit",
-    statusTone: "brand" as const,
-    eta: "Oct 24",
-  },
-  {
-    icon: "△",
-    name: "Obsidian Block",
-    origin: "Mexico",
-    status: "Customs Hold",
-    statusTone: "danger" as const,
-    eta: "Pending",
-  },
-  {
-    icon: "◆",
-    name: "Lapis Lazuli Slab",
-    origin: "Afghanistan",
-    status: "Processing",
-    statusTone: "neutral" as const,
-    eta: "Nov 02",
-  },
-];
-
-const ACTIVITY = [
-  { title: "New appraisal registered for Sapphire Matrix.", time: "2 hours ago", dot: "brand" },
-  { title: "Shipment #SHP-8492 cleared customs.", time: "Yesterday", dot: "neutral" },
-  { title: "Added 3 new Tourmaline specimens to inventory.", time: "Oct 18", dot: "neutral" },
-];
-
 function Overview() {
+  const { data } = useQuery({
+    queryKey: ["workspace", "overview"],
+    queryFn: fetchWorkspaceOverview,
+  });
+
+  const stats = data?.stats;
+  const cards = [
+    {
+      label: "Total Specimens",
+      value: String(stats?.specimenCount ?? "—"),
+      hint: "In catalog",
+      hintTone: "ink" as const,
+    },
+    {
+      label: "Collection Value",
+      value: stats ? formatPrice(stats.collectionValueCents) : "—",
+      hint: "Estimated",
+      hintTone: "ink" as const,
+    },
+    {
+      label: "Pending Shipments",
+      value: String(stats?.pendingShipments ?? "—"),
+      hint: "Awaiting dispatch",
+      hintTone: "danger" as const,
+    },
+  ];
+
+  const recent = data?.recentOrders ?? [];
+
   return (
     <div className="p-10">
       <h1 className="font-display text-5xl">Overview</h1>
@@ -54,7 +47,7 @@ function Overview() {
       </p>
 
       <div className="mt-8 grid gap-4 md:grid-cols-3">
-        {STATS.map((s, i) => {
+        {cards.map((s, i) => {
           const Icon = STAT_ICONS[i] ?? VaultIcon;
           return (
             <Card key={s.label}>
@@ -77,63 +70,37 @@ function Overview() {
         })}
       </div>
 
-      <div className="mt-10 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
-        <Card>
-          <CardBody>
-            <h2 className="font-display text-2xl">Active Shipments</h2>
+      <Card className="mt-10">
+        <CardBody>
+          <h2 className="font-display text-2xl">Recent Orders</h2>
+          {recent.length === 0 ? (
+            <p className="mt-4 text-sm text-ink-500">No orders yet.</p>
+          ) : (
             <table className="mt-4 w-full text-sm">
               <thead>
                 <tr className="text-left text-xs uppercase tracking-wider text-ink-500">
-                  <th className="py-2">Item</th>
-                  <th>Origin</th>
+                  <th className="py-2">Reference</th>
                   <th>Status</th>
-                  <th>ETA</th>
+                  <th>Total</th>
+                  <th>Date</th>
                 </tr>
               </thead>
               <tbody>
-                {SHIPMENTS.map((s) => (
-                  <tr key={s.name} className="border-t border-ink-700/5">
-                    <td className="py-3">
-                      <div className="flex items-center gap-3">
-                        <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-brand-50 text-brand-700">
-                          {s.icon}
-                        </span>
-                        <span className="font-medium">{s.name}</span>
-                      </div>
-                    </td>
-                    <td>{s.origin}</td>
+                {recent.map((o) => (
+                  <tr key={o.id} className="border-t border-ink-700/5">
+                    <td className="py-3 font-medium">#{o.reference}</td>
                     <td>
-                      <Badge tone={s.statusTone}>{s.status}</Badge>
+                      <Badge tone="neutral">{o.status.replace(/_/g, " ")}</Badge>
                     </td>
-                    <td>{s.eta}</td>
+                    <td>{formatPrice(o.totalCents)}</td>
+                    <td>{new Date(o.createdAt).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </CardBody>
-        </Card>
-        <Card>
-          <CardBody>
-            <h2 className="font-display text-2xl">Recent Activity</h2>
-            <ul className="mt-4 space-y-4">
-              {ACTIVITY.map((a) => (
-                <li key={a.title} className="flex gap-3 text-sm">
-                  <span
-                    className={
-                      "mt-1 h-2 w-2 shrink-0 rounded-full " +
-                      (a.dot === "brand" ? "bg-brand-600" : "bg-ink-400")
-                    }
-                  />
-                  <div>
-                    <p className="text-ink-900">{a.title}</p>
-                    <p className="text-xs text-ink-500">{a.time}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </CardBody>
-        </Card>
-      </div>
+          )}
+        </CardBody>
+      </Card>
     </div>
   );
 }

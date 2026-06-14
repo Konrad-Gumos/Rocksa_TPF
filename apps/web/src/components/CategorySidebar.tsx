@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { DiamondIcon, TriangleIcon, VolcanoIcon, DocIcon, ChartIcon } from "./Icons.tsx";
+import { DiamondIcon, TriangleIcon, VolcanoIcon, DocIcon, ChartIcon, TruckIcon, VaultIcon } from "./Icons.tsx";
 
 const ICONS: Record<string, typeof DiamondIcon> = {
   igneous: VolcanoIcon,
@@ -86,6 +86,9 @@ export const CategorySidebar = ({
 export const WorkspaceSidebar = () => (
   <CategorySidebar
     extra={[
+      { label: "Overview", to: "/workspace/overview", icon: ChartIcon },
+      { label: "Inventory", to: "/workspace/inventory", icon: VaultIcon },
+      { label: "Acquisitions", to: "/workspace/acquisitions", icon: TruckIcon },
       { label: "Reports", to: "/workspace/reports", icon: DocIcon },
       { label: "Analytics", to: "/workspace/analytics", icon: ChartIcon },
     ]}

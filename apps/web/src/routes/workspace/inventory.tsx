@@ -1,7 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Badge, Button, Card, CardBody } from "@rocksa/ui";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import {
+  Badge,
+  Button,
+  Card,
+  CardBody,
+  Dialog,
+  DialogContent,
+  Input,
+  Label,
+} from "@rocksa/ui";
 import { formatPrice } from "@rocksa/domain";
 import { useSpecimens } from "../../data/api-specimens.ts";
+import { createSpecimen, type NewSpecimenInput } from "../../data/api-workspace.ts";
 import { PlusIcon } from "../../components/Icons.tsx";
 
 export const Route = createFileRoute("/workspace/inventory")({ component: Inventory });
@@ -13,8 +25,28 @@ const STATUS_TONE = {
   sold: "danger",
 } as const;
 
+const emptyForm = (): NewSpecimenInput => ({
+  slug: "",
+  name: "",
+  category: "crystals",
+  description: "",
+  priceCents: 0,
+});
+
 function Inventory() {
+  const queryClient = useQueryClient();
   const { data: items = [] } = useSpecimens();
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState(emptyForm);
+
+  const addMutation = useMutation({
+    mutationFn: createSpecimen,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["specimens"] });
+      setForm(emptyForm());
+      setOpen(false);
+    },
+  });
 
   return (
     <div className="p-10">
@@ -25,41 +57,20 @@ function Inventory() {
             Manage and track your comprehensive gemstone and mineral collection.
           </p>
         </div>
-        <Button>
+        <Button onClick={() => setOpen(true)}>
           <PlusIcon className="h-4 w-4" /> Add New Specimen
         </Button>
       </div>
 
-      <div className="mt-8 flex items-center justify-between rounded-md border border-ink-700/5 bg-white p-3">
-        <div className="flex gap-2">
-          {["All", "Igneous", "Crystals", "Metamorphic"].map((t, i) => (
-            <button
-              key={t}
-              className={
-                "rounded-full px-4 py-1.5 text-sm " +
-                (i === 0 ? "bg-ink-900 text-white" : "border border-ink-700/10 text-ink-700")
-              }
-            >
-              {t}
-            </button>
-          ))}
-        </div>
-        <p className="text-sm text-ink-500">
-          Sort by: <span className="text-ink-900">Date Added (Newest)</span>
-        </p>
-      </div>
-
-      <Card className="mt-4">
+      <Card className="mt-8">
         <CardBody className="p-0">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-xs uppercase tracking-wider text-ink-500">
                 <th className="px-6 py-3">Specimen</th>
-                <th>ID</th>
                 <th>Category</th>
                 <th>Status</th>
                 <th>Value</th>
-                <th className="px-6">Date Added</th>
               </tr>
             </thead>
             <tbody>
@@ -71,9 +82,6 @@ function Inventory() {
                       <span className="font-medium">{s.name}</span>
                     </div>
                   </td>
-                  <td className="font-mono text-xs text-ink-500">
-                    #{s.category.slice(0, 3).toUpperCase()}-{s.id.padStart(3, "0")}
-                  </td>
                   <td className="capitalize">{s.category}</td>
                   <td>
                     <Badge tone={STATUS_TONE[s.stockStatus]}>
@@ -81,20 +89,65 @@ function Inventory() {
                     </Badge>
                   </td>
                   <td>{formatPrice(s.priceCents)}</td>
-                  <td className="px-6">Oct {((Number(s.id) * 3) % 28) + 1}, 2024</td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <div className="flex items-center justify-between border-t border-ink-700/5 px-6 py-3 text-sm text-ink-500">
-            <span>Showing 1–{items.length} of 124 specimens</span>
-            <div className="flex gap-2">
-              <button className="h-8 w-8 rounded-md border border-ink-700/10">‹</button>
-              <button className="h-8 w-8 rounded-md border border-ink-700/10">›</button>
-            </div>
-          </div>
         </CardBody>
       </Card>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-md">
+          <h2 className="font-display text-2xl">Add specimen</h2>
+          <div className="mt-4 space-y-3">
+            <div>
+              <Label>Slug</Label>
+              <Input
+                value={form.slug}
+                onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
+              />
+            </div>
+            <div>
+              <Label>Name</Label>
+              <Input
+                value={form.name}
+                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+              />
+            </div>
+            <div>
+              <Label>Category</Label>
+              <Input
+                value={form.category}
+                onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
+              />
+            </div>
+            <div>
+              <Label>Description</Label>
+              <Input
+                value={form.description}
+                onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+              />
+            </div>
+            <div>
+              <Label>Price (cents)</Label>
+              <Input
+                type="number"
+                value={form.priceCents || ""}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, priceCents: Number(e.target.value) || 0 }))
+                }
+              />
+            </div>
+            <Button
+              className="w-full"
+              onClick={() => addMutation.mutate(form)}
+              disabled={addMutation.isPending}
+            >
+              Save specimen
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
