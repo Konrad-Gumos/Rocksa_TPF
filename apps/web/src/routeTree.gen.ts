@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as WorkspaceRouteRouteImport } from './routes/workspace/route'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
+import { Route as AccountRouteRouteImport } from './routes/account/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorkspaceIndexRouteImport } from './routes/workspace/index'
 import { Route as CheckoutIndexRouteImport } from './routes/checkout/index'
@@ -26,6 +27,7 @@ import { Route as CheckoutPaymentRouteImport } from './routes/checkout/payment'
 import { Route as AuthResetRouteImport } from './routes/auth/reset'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AccountOrdersRouteImport } from './routes/account/orders'
 import { Route as DevComponentsRouteImport } from './routes/_dev/components'
 import { Route as CCategoryIndexRouteImport } from './routes/c/$category/index'
 import { Route as CCategoryPSlugRouteImport } from './routes/c/$category/p/$slug'
@@ -43,6 +45,11 @@ const WorkspaceRouteRoute = WorkspaceRouteRouteImport.update({
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRouteRoute = AccountRouteRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -115,6 +122,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const AccountOrdersRoute = AccountOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
 const DevComponentsRoute = DevComponentsRouteImport.update({
   id: '/_dev/components',
   path: '/components',
@@ -133,10 +145,12 @@ const CCategoryPSlugRoute = CCategoryPSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/workspace': typeof WorkspaceRouteRouteWithChildren
   '/cart': typeof CartRoute
   '/components': typeof DevComponentsRoute
+  '/account/orders': typeof AccountOrdersRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset': typeof AuthResetRoute
@@ -155,9 +169,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account': typeof AccountRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/cart': typeof CartRoute
   '/components': typeof DevComponentsRoute
+  '/account/orders': typeof AccountOrdersRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset': typeof AuthResetRoute
@@ -177,10 +193,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/account': typeof AccountRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/workspace': typeof WorkspaceRouteRouteWithChildren
   '/cart': typeof CartRoute
   '/_dev/components': typeof DevComponentsRoute
+  '/account/orders': typeof AccountOrdersRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset': typeof AuthResetRoute
@@ -201,10 +219,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/account'
     | '/auth'
     | '/workspace'
     | '/cart'
     | '/components'
+    | '/account/orders'
     | '/auth/login'
     | '/auth/register'
     | '/auth/reset'
@@ -223,9 +243,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/account'
     | '/auth'
     | '/cart'
     | '/components'
+    | '/account/orders'
     | '/auth/login'
     | '/auth/register'
     | '/auth/reset'
@@ -244,10 +266,12 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/account'
     | '/auth'
     | '/workspace'
     | '/cart'
     | '/_dev/components'
+    | '/account/orders'
     | '/auth/login'
     | '/auth/register'
     | '/auth/reset'
@@ -267,6 +291,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountRouteRoute: typeof AccountRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   WorkspaceRouteRoute: typeof WorkspaceRouteRouteWithChildren
   CartRoute: typeof CartRoute
@@ -300,6 +325,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -400,6 +432,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/account/orders': {
+      id: '/account/orders'
+      path: '/orders'
+      fullPath: '/account/orders'
+      preLoaderRoute: typeof AccountOrdersRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
     '/_dev/components': {
       id: '/_dev/components'
       path: '/components'
@@ -423,6 +462,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AccountRouteRouteChildren {
+  AccountOrdersRoute: typeof AccountOrdersRoute
+}
+
+const AccountRouteRouteChildren: AccountRouteRouteChildren = {
+  AccountOrdersRoute: AccountOrdersRoute,
+}
+
+const AccountRouteRouteWithChildren = AccountRouteRoute._addFileChildren(
+  AccountRouteRouteChildren,
+)
 
 interface AuthRouteRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
@@ -464,6 +515,7 @@ const WorkspaceRouteRouteWithChildren = WorkspaceRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountRouteRoute: AccountRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
   WorkspaceRouteRoute: WorkspaceRouteRouteWithChildren,
   CartRoute: CartRoute,

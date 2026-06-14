@@ -149,10 +149,15 @@ function OrderPage() {
             ))}
           </div>
 
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Button asChild variant="secondary">
               <Link to="/">Continue shopping</Link>
             </Button>
+            {status === "authed" && (
+              <Button asChild>
+                <Link to="/account/orders">View order history</Link>
+              </Button>
+            )}
           </div>
         </CardBody>
       </Card>
