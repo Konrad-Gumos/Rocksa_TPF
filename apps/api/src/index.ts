@@ -19,7 +19,15 @@ app.use(
   }),
 );
 
-app.get("/health", (c) => c.json({ ok: true }));
+app.get("/health", async (c) => {
+  try {
+    const { sql } = await import("@rocksa/db");
+    await sql`select 1`;
+    return c.json({ ok: true, db: true });
+  } catch {
+    return c.json({ ok: true, db: false }, 503);
+  }
+});
 app.route("/v1/specimens", specimensRouter);
 app.route("/v1/cart", cartRouter);
 app.route("/v1/orders", ordersRouter);
