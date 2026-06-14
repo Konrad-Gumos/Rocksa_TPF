@@ -65,6 +65,11 @@ export const ProductCard = ({
             <p className="font-display text-lg text-brand-600">
               {formatPrice(specimen.priceCents)}
             </p>
+            {specimen.compareAtCents && specimen.compareAtCents > specimen.priceCents && (
+              <p className="text-xs text-ink-400 line-through">
+                {formatPrice(specimen.compareAtCents)}
+              </p>
+            )}
           </div>
           <button
             type="button"

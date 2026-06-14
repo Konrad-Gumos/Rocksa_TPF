@@ -141,9 +141,16 @@ const CartRow = ({
         </dl>
         <div className="mt-auto flex items-center justify-between pt-4">
           <QtyStepper value={qty} onChange={onQty} />
-          <p className="font-display text-2xl text-brand-600">
-            {formatPrice(lineCents)}
-          </p>
+          <div className="text-right">
+            {specimen.compareAtCents && specimen.compareAtCents > specimen.priceCents && (
+              <p className="text-sm text-ink-400 line-through">
+                {formatPrice(specimen.compareAtCents * qty)}
+              </p>
+            )}
+            <p className="font-display text-2xl text-brand-600">
+              {formatPrice(lineCents)}
+            </p>
+          </div>
         </div>
       </div>
     </CardBody>
