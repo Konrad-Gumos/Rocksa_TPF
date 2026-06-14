@@ -5,6 +5,7 @@ import { SPECIMENS } from "./specimens.ts";
 import { gemPlaceholder, paletteFor } from "./placeholder.ts";
 
 export interface SpecimenRow {
+  id: string;
   slug: string;
   name: string;
   category: Specimen["category"];
@@ -20,7 +21,7 @@ export interface SpecimenRow {
 }
 
 export const normalizeSpecimen = (r: SpecimenRow): Specimen => ({
-  id: r.slug,
+  id: r.id,
   slug: r.slug,
   name: r.name,
   category: r.category,
