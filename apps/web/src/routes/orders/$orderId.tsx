@@ -7,6 +7,7 @@ import { useOrder } from "../../state/order.tsx";
 import { useSpecimenLookup } from "../../data/api-specimens.ts";
 import { fetchOrder, type ServerOrderItem } from "../../data/api-orders.ts";
 import { DiamondIcon } from "../../components/Icons.tsx";
+import { OrderStatusTimeline } from "../../components/OrderStatusTimeline.tsx";
 
 export const Route = createFileRoute("/orders/$orderId")({ component: OrderPage });
 
@@ -95,6 +96,11 @@ function OrderPage() {
       : [];
 
   const reference = order.reference;
+  const orderStatus =
+    fetched?.status ??
+    ("status" in order && order.status ? order.status : "pending_payment");
+  const paymentMethod =
+    "paymentMethod" in order ? order.paymentMethod : undefined;
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-surface-muted px-6 py-16">
@@ -108,6 +114,9 @@ function OrderPage() {
             <p className="text-xs uppercase tracking-wider text-ink-500">
               Order Reference — #{reference}
             </p>
+            <div className="max-w-lg mx-auto">
+              <OrderStatusTimeline status={orderStatus} />
+            </div>
             <p className="text-ink-700 leading-relaxed max-w-md mx-auto">
               Thank you for entrusting Rocksa with this exceptional addition to your collection. One
               of our senior curators will be in touch shortly to coordinate secure vault transfer,
@@ -153,6 +162,13 @@ function OrderPage() {
             <Button asChild variant="secondary">
               <Link to="/">Continue shopping</Link>
             </Button>
+            {paymentMethod === "wire" && (
+              <Button asChild>
+                <Link to="/orders/$orderId/wire" params={{ orderId }}>
+                  Wire transfer instructions
+                </Link>
+              </Button>
+            )}
             {status === "authed" && (
               <Button asChild>
                 <Link to="/account/orders">View order history</Link>

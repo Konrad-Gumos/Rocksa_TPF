@@ -6,6 +6,7 @@ export interface CreateOrderInput {
   subtotalCents: number;
   shippingCents: number;
   totalCents: number;
+  paymentMethod?: "card" | "wire" | "wallet";
 }
 
 export interface ServerOrder extends CreateOrderInput {
@@ -44,6 +45,8 @@ export const createServerOrder = async (input: CreateOrderInput): Promise<Server
         specimenId: i.specimenId,
         qty: i.qty,
       })),
+      shippingCents: input.shippingCents,
+      paymentMethod: input.paymentMethod,
     },
   });
   if (!res) return null;

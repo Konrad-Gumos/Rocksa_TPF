@@ -47,6 +47,8 @@ export interface Order {
   shippingCents: number;
   totalCents: number;
   createdAt: string;
+  status?: string;
+  paymentMethod?: PaymentInfo["method"];
 }
 
 interface OrderContextValue {
@@ -56,7 +58,9 @@ interface OrderContextValue {
   setPayment: (next: Partial<PaymentInfo>) => void;
   lastOrder: Order | null;
   createOrder: (
-    params: Omit<Order, "id" | "reference" | "createdAt">,
+    params: Omit<Order, "id" | "reference" | "createdAt" | "status"> & {
+      paymentMethod?: PaymentInfo["method"];
+    },
   ) => Promise<Order>;
   clearCheckout: () => void;
 }
@@ -103,12 +107,25 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
 
   const createOrder = useCallback(
     async (
-      params: Omit<Order, "id" | "reference" | "createdAt">,
+      params: Omit<Order, "id" | "reference" | "createdAt" | "status"> & {
+        paymentMethod?: PaymentInfo["method"];
+      },
     ): Promise<Order> => {
       if (status === "authed" && user) {
-        const server = await createServerOrder(params);
+        const server = await createServerOrder({
+          items: params.items,
+          subtotalCents: params.subtotalCents,
+          shippingCents: params.shippingCents,
+          totalCents: params.totalCents,
+          paymentMethod: params.paymentMethod,
+        });
         if (server) {
-          const order: Order = { ...params, ...server };
+          const order: Order = {
+            ...params,
+            ...server,
+            status: params.paymentMethod === "card" ? "paid" : "pending_payment",
+            paymentMethod: params.paymentMethod,
+          };
           setLastOrder(order);
           clearCheckout();
           return order;
@@ -119,6 +136,8 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
         id: crypto.randomUUID(),
         reference: orderReference(),
         createdAt: new Date().toISOString(),
+        status: params.paymentMethod === "card" ? "paid" : "pending_payment",
+        paymentMethod: params.paymentMethod,
       };
       setLastOrder(order);
       clearCheckout();

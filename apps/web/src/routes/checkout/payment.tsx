@@ -128,6 +128,10 @@ function Payment() {
             <input type="hidden" {...register("method")} />
 
             <TabsContent value="card" className="pt-6">
+              <p className="mb-4 text-xs text-ink-500">
+                Card details are validated locally. Stripe Elements integration will replace
+                this form for live payment capture.
+              </p>
               <Card>
                 <CardBody className="space-y-5">
                   <div>

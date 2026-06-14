@@ -34,6 +34,7 @@ import { Route as AccountCollectionRouteImport } from './routes/account/collecti
 import { Route as AccountAddressesRouteImport } from './routes/account/addresses'
 import { Route as DevComponentsRouteImport } from './routes/_dev/components'
 import { Route as CCategoryIndexRouteImport } from './routes/c/$category/index'
+import { Route as OrdersOrderIdWireRouteImport } from './routes/orders/$orderId/wire'
 import { Route as CCategoryPSlugRouteImport } from './routes/c/$category/p/$slug'
 
 const SearchRoute = SearchRouteImport.update({
@@ -161,6 +162,11 @@ const CCategoryIndexRoute = CCategoryIndexRouteImport.update({
   path: '/c/$category/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrdersOrderIdWireRoute = OrdersOrderIdWireRouteImport.update({
+  id: '/wire',
+  path: '/wire',
+  getParentRoute: () => OrdersOrderIdRoute,
+} as any)
 const CCategoryPSlugRoute = CCategoryPSlugRouteImport.update({
   id: '/c/$category/p/$slug',
   path: '/c/$category/p/$slug',
@@ -183,7 +189,7 @@ export interface FileRoutesByFullPath {
   '/auth/reset': typeof AuthResetRoute
   '/checkout/payment': typeof CheckoutPaymentRoute
   '/checkout/review': typeof CheckoutReviewRoute
-  '/orders/$orderId': typeof OrdersOrderIdRoute
+  '/orders/$orderId': typeof OrdersOrderIdRouteWithChildren
   '/workspace/acquisitions': typeof WorkspaceAcquisitionsRoute
   '/workspace/analytics': typeof WorkspaceAnalyticsRoute
   '/workspace/inventory': typeof WorkspaceInventoryRoute
@@ -192,6 +198,7 @@ export interface FileRoutesByFullPath {
   '/account/': typeof AccountIndexRoute
   '/checkout/': typeof CheckoutIndexRoute
   '/workspace/': typeof WorkspaceIndexRoute
+  '/orders/$orderId/wire': typeof OrdersOrderIdWireRoute
   '/c/$category/': typeof CCategoryIndexRoute
   '/c/$category/p/$slug': typeof CCategoryPSlugRoute
 }
@@ -209,7 +216,7 @@ export interface FileRoutesByTo {
   '/auth/reset': typeof AuthResetRoute
   '/checkout/payment': typeof CheckoutPaymentRoute
   '/checkout/review': typeof CheckoutReviewRoute
-  '/orders/$orderId': typeof OrdersOrderIdRoute
+  '/orders/$orderId': typeof OrdersOrderIdRouteWithChildren
   '/workspace/acquisitions': typeof WorkspaceAcquisitionsRoute
   '/workspace/analytics': typeof WorkspaceAnalyticsRoute
   '/workspace/inventory': typeof WorkspaceInventoryRoute
@@ -218,6 +225,7 @@ export interface FileRoutesByTo {
   '/account': typeof AccountIndexRoute
   '/checkout': typeof CheckoutIndexRoute
   '/workspace': typeof WorkspaceIndexRoute
+  '/orders/$orderId/wire': typeof OrdersOrderIdWireRoute
   '/c/$category': typeof CCategoryIndexRoute
   '/c/$category/p/$slug': typeof CCategoryPSlugRoute
 }
@@ -238,7 +246,7 @@ export interface FileRoutesById {
   '/auth/reset': typeof AuthResetRoute
   '/checkout/payment': typeof CheckoutPaymentRoute
   '/checkout/review': typeof CheckoutReviewRoute
-  '/orders/$orderId': typeof OrdersOrderIdRoute
+  '/orders/$orderId': typeof OrdersOrderIdRouteWithChildren
   '/workspace/acquisitions': typeof WorkspaceAcquisitionsRoute
   '/workspace/analytics': typeof WorkspaceAnalyticsRoute
   '/workspace/inventory': typeof WorkspaceInventoryRoute
@@ -247,6 +255,7 @@ export interface FileRoutesById {
   '/account/': typeof AccountIndexRoute
   '/checkout/': typeof CheckoutIndexRoute
   '/workspace/': typeof WorkspaceIndexRoute
+  '/orders/$orderId/wire': typeof OrdersOrderIdWireRoute
   '/c/$category/': typeof CCategoryIndexRoute
   '/c/$category/p/$slug': typeof CCategoryPSlugRoute
 }
@@ -277,6 +286,7 @@ export interface FileRouteTypes {
     | '/account/'
     | '/checkout/'
     | '/workspace/'
+    | '/orders/$orderId/wire'
     | '/c/$category/'
     | '/c/$category/p/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -303,6 +313,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/checkout'
     | '/workspace'
+    | '/orders/$orderId/wire'
     | '/c/$category'
     | '/c/$category/p/$slug'
   id:
@@ -331,6 +342,7 @@ export interface FileRouteTypes {
     | '/account/'
     | '/checkout/'
     | '/workspace/'
+    | '/orders/$orderId/wire'
     | '/c/$category/'
     | '/c/$category/p/$slug'
   fileRoutesById: FileRoutesById
@@ -345,7 +357,7 @@ export interface RootRouteChildren {
   DevComponentsRoute: typeof DevComponentsRoute
   CheckoutPaymentRoute: typeof CheckoutPaymentRoute
   CheckoutReviewRoute: typeof CheckoutReviewRoute
-  OrdersOrderIdRoute: typeof OrdersOrderIdRoute
+  OrdersOrderIdRoute: typeof OrdersOrderIdRouteWithChildren
   CheckoutIndexRoute: typeof CheckoutIndexRoute
   CCategoryIndexRoute: typeof CCategoryIndexRoute
   CCategoryPSlugRoute: typeof CCategoryPSlugRoute
@@ -528,6 +540,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CCategoryIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/orders/$orderId/wire': {
+      id: '/orders/$orderId/wire'
+      path: '/wire'
+      fullPath: '/orders/$orderId/wire'
+      preLoaderRoute: typeof OrdersOrderIdWireRouteImport
+      parentRoute: typeof OrdersOrderIdRoute
+    }
     '/c/$category/p/$slug': {
       id: '/c/$category/p/$slug'
       path: '/c/$category/p/$slug'
@@ -594,6 +613,18 @@ const WorkspaceRouteRouteWithChildren = WorkspaceRouteRoute._addFileChildren(
   WorkspaceRouteRouteChildren,
 )
 
+interface OrdersOrderIdRouteChildren {
+  OrdersOrderIdWireRoute: typeof OrdersOrderIdWireRoute
+}
+
+const OrdersOrderIdRouteChildren: OrdersOrderIdRouteChildren = {
+  OrdersOrderIdWireRoute: OrdersOrderIdWireRoute,
+}
+
+const OrdersOrderIdRouteWithChildren = OrdersOrderIdRoute._addFileChildren(
+  OrdersOrderIdRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRouteRoute: AccountRouteRouteWithChildren,
@@ -604,7 +635,7 @@ const rootRouteChildren: RootRouteChildren = {
   DevComponentsRoute: DevComponentsRoute,
   CheckoutPaymentRoute: CheckoutPaymentRoute,
   CheckoutReviewRoute: CheckoutReviewRoute,
-  OrdersOrderIdRoute: OrdersOrderIdRoute,
+  OrdersOrderIdRoute: OrdersOrderIdRouteWithChildren,
   CheckoutIndexRoute: CheckoutIndexRoute,
   CCategoryIndexRoute: CCategoryIndexRoute,
   CCategoryPSlugRoute: CCategoryPSlugRoute,

@@ -62,8 +62,13 @@ function Review() {
       subtotalCents,
       shippingCents,
       totalCents,
+      paymentMethod: payment.method,
     });
     clear();
+    if (payment.method === "wire") {
+      navigate({ to: "/orders/$orderId/wire", params: { orderId: order.id } });
+      return;
+    }
     navigate({ to: "/orders/$orderId", params: { orderId: order.id } });
   };
 

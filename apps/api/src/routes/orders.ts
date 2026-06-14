@@ -22,6 +22,8 @@ const createBody = z.object({
       qty: z.number().int().min(1),
     }),
   ),
+  shippingCents: z.number().int().min(0).optional(),
+  paymentMethod: z.enum(["card", "wire", "wallet"]).optional(),
 });
 
 const specimenSnapshots = async (ids: string[]) => {
@@ -97,15 +99,21 @@ ordersRouter.post("/", async (c) => {
       };
     });
 
+  const shippingCents = body.shippingCents ?? 0;
+  const totalCents = subtotal + shippingCents;
+  const paymentMethod = body.paymentMethod ?? "card";
+  const orderStatus =
+    paymentMethod === "card" ? "paid" : "pending_payment";
+
   const inserted = await db
     .insert(orders)
     .values({
       userId: user.id,
       reference: orderReference(),
-      status: "pending_payment",
+      status: orderStatus,
       subtotalCents: subtotal,
-      shippingCents: 0,
-      totalCents: subtotal,
+      shippingCents,
+      totalCents,
     })
     .returning();
   const order = inserted[0]!;
