@@ -34,6 +34,7 @@ export const normalizeSpecimen = (r: SpecimenRow): Specimen => ({
   imageUrl:
     r.imageUrl || gemPlaceholder(r.slug, paletteFor(r.attributes?.["Color"])),
   attributes: r.attributes ?? {},
+  ...(r.createdAt ? { createdAt: r.createdAt } : {}),
 });
 
 export const fetchAllSpecimens = async (): Promise<Specimen[]> => {

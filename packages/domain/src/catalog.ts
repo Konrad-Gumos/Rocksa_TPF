@@ -45,7 +45,11 @@ export const sortSpecimens = (
     case "price-desc":
       return copy.sort((a, b) => b.priceCents - a.priceCents);
     default:
-      return copy;
+      return copy.sort((a, b) => {
+        const aTime = a.createdAt ? Date.parse(a.createdAt) : 0;
+        const bTime = b.createdAt ? Date.parse(b.createdAt) : 0;
+        return bTime - aTime;
+      });
   }
 };
 

@@ -1,33 +1,36 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Badge, Button, Card, CardBody } from "@rocksa/ui";
+import { formatPrice } from "@rocksa/domain";
 import { TopNav } from "../components/TopNav.tsx";
 import { CategorySidebar } from "../components/CategorySidebar.tsx";
 import { ProductCard } from "../components/ProductCard.tsx";
-import { ArrowRightIcon, ChevronIcon } from "../components/Icons.tsx";
+import { ArrowRightIcon } from "../components/Icons.tsx";
 import { useSpecimens } from "../data/api-specimens.ts";
 import { specimensQueryOptions } from "../data/specimens-query.ts";
+import {
+  collectionQueryOptions,
+  featuredDeal,
+  newArrivals,
+  staffPickFallback,
+} from "../data/merchandising.ts";
 
 export const Route = createFileRoute("/")({
   loader: ({ context }) =>
-    context.queryClient.ensureQueryData(specimensQueryOptions),
+    Promise.all([
+      context.queryClient.ensureQueryData(specimensQueryOptions),
+      context.queryClient.ensureQueryData(collectionQueryOptions("staff-picks")),
+    ]),
   component: Landing,
 });
 
-const PAGE_SIZE = 4;
-
 function Landing() {
   const { data = [] } = useSpecimens();
-  const [page, setPage] = useState(0);
-  const featured =
-    data.find((s) => s.slug === "amethyst-geode-slice") ??
-    data.find((s) => s.category === "crystals") ??
-    data[0];
-  const maxPage = Math.max(0, Math.ceil(data.length / PAGE_SIZE) - 1);
-  const trending = data.slice(
-    page * PAGE_SIZE,
-    page * PAGE_SIZE + PAGE_SIZE,
-  );
+  const { data: staffPicks = [] } = useQuery(collectionQueryOptions("staff-picks"));
+
+  const deal = featuredDeal(data);
+  const arrivals = newArrivals(data);
+  const picks = staffPicks.length > 0 ? staffPicks : staffPickFallback(data);
 
   return (
     <div>
@@ -40,31 +43,50 @@ function Landing() {
         <main className="flex-1 px-10 py-10">
           <section className="grid gap-6 lg:grid-cols-[1fr_320px]">
             <div className="relative overflow-hidden rounded-md bg-ink-900 text-white">
-              {featured && (
+              {deal && (
                 <img
-                  src={featured.imageUrl}
+                  src={deal.imageUrl}
                   alt=""
                   className="absolute inset-0 h-full w-full object-cover opacity-80"
                 />
               )}
               <div className="relative z-10 max-w-md p-8">
                 <Badge tone="brand" className="bg-brand-200/90 text-brand-700">
-                  NEW ACQUISITION
+                  FEATURED ACQUISITION
                 </Badge>
                 <h1 className="font-display text-4xl mt-4 leading-tight">
-                  {featured?.name ?? "Featured Specimen"}
+                  {deal?.name ?? "Featured Specimen"}
                 </h1>
                 <p className="text-sm mt-3 text-white/85 max-w-sm">
-                  {featured?.description ??
+                  {deal?.description ??
                     "Exceptional clarity and saturation from our latest catalog."}
                 </p>
+                {deal && (
+                  <p className="mt-4 flex items-baseline gap-3">
+                    <span className="font-display text-2xl">
+                      {formatPrice(deal.priceCents)}
+                    </span>
+                    {deal.compareAtCents && (
+                      <span className="text-sm text-white/60 line-through">
+                        {formatPrice(deal.compareAtCents)}
+                      </span>
+                    )}
+                  </p>
+                )}
                 <Button asChild className="mt-6">
-                  <Link
-                    to="/c/$category"
-                    params={{ category: featured?.category ?? "crystals" }}
-                  >
-                    Explore Collection <ArrowRightIcon className="h-4 w-4" />
-                  </Link>
+                  {deal ? (
+                    <Link
+                      to="/c/$category/p/$slug"
+                      params={{ category: deal.category, slug: deal.slug }}
+                      search={{ modal: true }}
+                    >
+                      View specimen <ArrowRightIcon className="h-4 w-4" />
+                    </Link>
+                  ) : (
+                    <Link to="/c/$category" params={{ category: "crystals" }}>
+                      Explore Collection <ArrowRightIcon className="h-4 w-4" />
+                    </Link>
+                  )}
                 </Button>
               </div>
             </div>
@@ -100,30 +122,29 @@ function Landing() {
 
           <section className="mt-12">
             <div className="flex items-end justify-between">
-              <h2 className="font-display text-3xl">Trending Now</h2>
-              <div className="flex gap-2 text-ink-500">
-                <button
-                  type="button"
-                  aria-label="Previous specimens"
-                  disabled={page <= 0}
-                  onClick={() => setPage((p) => Math.max(0, p - 1))}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-ink-700/10 disabled:opacity-40"
-                >
-                  <ChevronIcon className="h-4 w-4 rotate-180" />
-                </button>
-                <button
-                  type="button"
-                  aria-label="Next specimens"
-                  disabled={page >= maxPage}
-                  onClick={() => setPage((p) => Math.min(maxPage, p + 1))}
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-ink-700/10 disabled:opacity-40"
-                >
-                  <ChevronIcon className="h-4 w-4" />
-                </button>
-              </div>
+              <h2 className="font-display text-3xl">New Arrivals</h2>
+              <Link
+                to="/c/$category"
+                params={{ category: "crystals" }}
+                search={{ sort: "newest" }}
+                className="text-sm font-medium text-brand-600"
+              >
+                View all
+              </Link>
             </div>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {trending.map((s) => (
+              {arrivals.map((s) => (
+                <ProductCard key={s.id} specimen={s} />
+              ))}
+            </div>
+          </section>
+
+          <section className="mt-12">
+            <div className="flex items-end justify-between">
+              <h2 className="font-display text-3xl">Polecamy — Staff Picks</h2>
+            </div>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {picks.map((s) => (
                 <ProductCard key={s.id} specimen={s} />
               ))}
             </div>

@@ -1,5 +1,5 @@
 import { db, sql } from "./client.ts";
-import { specimenAttrs, specimens } from "./schema.ts";
+import { collectionItems, collections, specimenAttrs, specimens } from "./schema.ts";
 
 type SeedRow = typeof specimens.$inferInsert & {
   attributes: Record<string, string>;
@@ -38,12 +38,17 @@ const DEMO: SeedRow[] = [
   { slug: "fossilized-wood-slab", name: "Fossilized Wood Slab", category: "sedimentary", description: "Cross-section slab preserving mineralized wood grain and texture.", priceCents: 2_400_00, originCountry: "USA", imageUrl: "", attributes: { Color: "Brown", Origin: "Petrified" } },
 ];
 
+await db.delete(collectionItems);
+await db.delete(collections);
 await db.delete(specimenAttrs);
 await db.delete(specimens);
+
+const bySlug = new Map<string, string>();
 
 for (const { attributes, ...row } of DEMO) {
   const inserted = await db.insert(specimens).values(row).returning();
   const specimen = inserted[0]!;
+  bySlug.set(specimen.slug, specimen.id);
   const attrRows = Object.entries(attributes).map(([key, value]) => ({
     specimenId: specimen.id,
     key,
@@ -51,6 +56,29 @@ for (const { attributes, ...row } of DEMO) {
   }));
   if (attrRows.length > 0) {
     await db.insert(specimenAttrs).values(attrRows);
+  }
+}
+
+const [staffPicks] = await db
+  .insert(collections)
+  .values({ name: "Staff Picks", slug: "staff-picks" })
+  .returning();
+
+const pickSlugs = [
+  "deep-blue-sapphire",
+  "amethyst-geode-slice",
+  "malachite-polished-slab",
+  "raw-aquamarine",
+];
+
+for (let i = 0; i < pickSlugs.length; i++) {
+  const specimenId = bySlug.get(pickSlugs[i]!);
+  if (specimenId && staffPicks) {
+    await db.insert(collectionItems).values({
+      collectionId: staffPicks.id,
+      specimenId,
+      position: i,
+    });
   }
 }
 

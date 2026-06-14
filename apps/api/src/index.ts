@@ -6,6 +6,7 @@ import { specimensRouter } from "./routes/specimens.ts";
 import { cartRouter } from "./routes/cart.ts";
 import { ordersRouter } from "./routes/orders.ts";
 import { meRouter } from "./routes/me.ts";
+import { collectionsRouter } from "./routes/collections.ts";
 
 const app = new Hono();
 
@@ -32,6 +33,7 @@ app.route("/v1/specimens", specimensRouter);
 app.route("/v1/cart", cartRouter);
 app.route("/v1/orders", ordersRouter);
 app.route("/v1/me", meRouter);
+app.route("/v1/collections", collectionsRouter);
 
 console.log(`api listening on http://localhost:${env.PORT}`);
 

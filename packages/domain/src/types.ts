@@ -33,6 +33,7 @@ export interface Specimen {
   originCountry: string | null;
   imageUrl: string;
   attributes: Record<string, string>;
+  createdAt?: string;
 }
 
 export interface CartItem {
