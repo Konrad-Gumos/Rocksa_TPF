@@ -8,6 +8,13 @@ interface Props {
   variant?: "full" | "minimal";
 }
 
+const NAV_LINKS = [
+  { label: "Collections", to: "/" as const },
+  { label: "Custom Design", href: "#" },
+  { label: "Investment", href: "#" },
+  { label: "Journal", href: "#" },
+] as const;
+
 const initials = (name: string | null | undefined): string => {
   if (!name) return "JC";
   return (
@@ -49,7 +56,21 @@ export const TopNav = ({ variant = "full" }: Props) => {
           Rocksa
         </Link>
 
-        <div className="relative flex-1 max-w-xl mx-auto">
+        <nav className="hidden items-center gap-8 font-display text-lg md:flex">
+          {NAV_LINKS.map((link) =>
+            "to" in link ? (
+              <Link key={link.label} to={link.to} className="text-ink-900">
+                {link.label}
+              </Link>
+            ) : (
+              <a key={link.label} href={link.href} className="text-ink-500">
+                {link.label}
+              </a>
+            ),
+          )}
+        </nav>
+
+        <div className="relative mx-auto hidden max-w-xl flex-1 lg:block">
           <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" />
           <Input placeholder="Search collection…" className="pl-10 bg-white/80 border-ink-700/5" />
         </div>
