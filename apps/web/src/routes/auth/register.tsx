@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Button, Card, CardBody, Input, Label } from "@rocksa/ui";
-import { useAuth } from "@rocksa/auth";
+import { useAuth, defaultRouteForRole } from "@rocksa/auth";
 
 export const Route = createFileRoute("/auth/register")({ component: Register });
 
@@ -24,8 +24,8 @@ function Register() {
     }
     setBusy(true);
     try {
-      await auth.signUp(email, password, fullName, { role: "curator" });
-      navigate({ to: "/workspace/overview" });
+      const profile = await auth.signUp(email, password, fullName);
+      navigate({ to: defaultRouteForRole(profile.role) });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Sign-up failed");
     } finally {
@@ -39,7 +39,7 @@ function Register() {
         <CardBody className="space-y-6">
           <div className="text-center space-y-1">
             <p className="font-display text-brand-600 text-2xl">Rocksa</p>
-            <h1 className="font-display text-2xl">Create Your Curator Account</h1>
+            <h1 className="font-display text-2xl">Create Your Account</h1>
           </div>
           <form className="space-y-5" onSubmit={submit}>
             <div>
