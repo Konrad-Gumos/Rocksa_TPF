@@ -24,7 +24,7 @@ function AccountOrdersPage() {
   });
 
   return (
-    <main className="mx-auto max-w-[900px] px-6 py-12">
+    <main className="flex-1 px-10 py-12">
       <h1 className="font-display text-5xl">Your Orders</h1>
       <p className="mt-2 text-ink-500">A record of your acquisitions with Rocksa.</p>
 

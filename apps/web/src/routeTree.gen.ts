@@ -17,6 +17,7 @@ import { Route as AccountRouteRouteImport } from './routes/account/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorkspaceIndexRouteImport } from './routes/workspace/index'
 import { Route as CheckoutIndexRouteImport } from './routes/checkout/index'
+import { Route as AccountIndexRouteImport } from './routes/account/index'
 import { Route as WorkspaceReportsRouteImport } from './routes/workspace/reports'
 import { Route as WorkspaceOverviewRouteImport } from './routes/workspace/overview'
 import { Route as WorkspaceInventoryRouteImport } from './routes/workspace/inventory'
@@ -29,6 +30,8 @@ import { Route as AuthResetRouteImport } from './routes/auth/reset'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AccountOrdersRouteImport } from './routes/account/orders'
+import { Route as AccountCollectionRouteImport } from './routes/account/collection'
+import { Route as AccountAddressesRouteImport } from './routes/account/addresses'
 import { Route as DevComponentsRouteImport } from './routes/_dev/components'
 import { Route as CCategoryIndexRouteImport } from './routes/c/$category/index'
 import { Route as CCategoryPSlugRouteImport } from './routes/c/$category/p/$slug'
@@ -72,6 +75,11 @@ const CheckoutIndexRoute = CheckoutIndexRouteImport.update({
   id: '/checkout/',
   path: '/checkout/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AccountIndexRoute = AccountIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AccountRouteRoute,
 } as any)
 const WorkspaceReportsRoute = WorkspaceReportsRouteImport.update({
   id: '/reports',
@@ -133,6 +141,16 @@ const AccountOrdersRoute = AccountOrdersRouteImport.update({
   path: '/orders',
   getParentRoute: () => AccountRouteRoute,
 } as any)
+const AccountCollectionRoute = AccountCollectionRouteImport.update({
+  id: '/collection',
+  path: '/collection',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
+const AccountAddressesRoute = AccountAddressesRouteImport.update({
+  id: '/addresses',
+  path: '/addresses',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
 const DevComponentsRoute = DevComponentsRouteImport.update({
   id: '/_dev/components',
   path: '/components',
@@ -157,6 +175,8 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/search': typeof SearchRoute
   '/components': typeof DevComponentsRoute
+  '/account/addresses': typeof AccountAddressesRoute
+  '/account/collection': typeof AccountCollectionRoute
   '/account/orders': typeof AccountOrdersRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -169,6 +189,7 @@ export interface FileRoutesByFullPath {
   '/workspace/inventory': typeof WorkspaceInventoryRoute
   '/workspace/overview': typeof WorkspaceOverviewRoute
   '/workspace/reports': typeof WorkspaceReportsRoute
+  '/account/': typeof AccountIndexRoute
   '/checkout/': typeof CheckoutIndexRoute
   '/workspace/': typeof WorkspaceIndexRoute
   '/c/$category/': typeof CCategoryIndexRoute
@@ -176,11 +197,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/account': typeof AccountRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/cart': typeof CartRoute
   '/search': typeof SearchRoute
   '/components': typeof DevComponentsRoute
+  '/account/addresses': typeof AccountAddressesRoute
+  '/account/collection': typeof AccountCollectionRoute
   '/account/orders': typeof AccountOrdersRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -193,6 +215,7 @@ export interface FileRoutesByTo {
   '/workspace/inventory': typeof WorkspaceInventoryRoute
   '/workspace/overview': typeof WorkspaceOverviewRoute
   '/workspace/reports': typeof WorkspaceReportsRoute
+  '/account': typeof AccountIndexRoute
   '/checkout': typeof CheckoutIndexRoute
   '/workspace': typeof WorkspaceIndexRoute
   '/c/$category': typeof CCategoryIndexRoute
@@ -207,6 +230,8 @@ export interface FileRoutesById {
   '/cart': typeof CartRoute
   '/search': typeof SearchRoute
   '/_dev/components': typeof DevComponentsRoute
+  '/account/addresses': typeof AccountAddressesRoute
+  '/account/collection': typeof AccountCollectionRoute
   '/account/orders': typeof AccountOrdersRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -219,6 +244,7 @@ export interface FileRoutesById {
   '/workspace/inventory': typeof WorkspaceInventoryRoute
   '/workspace/overview': typeof WorkspaceOverviewRoute
   '/workspace/reports': typeof WorkspaceReportsRoute
+  '/account/': typeof AccountIndexRoute
   '/checkout/': typeof CheckoutIndexRoute
   '/workspace/': typeof WorkspaceIndexRoute
   '/c/$category/': typeof CCategoryIndexRoute
@@ -234,6 +260,8 @@ export interface FileRouteTypes {
     | '/cart'
     | '/search'
     | '/components'
+    | '/account/addresses'
+    | '/account/collection'
     | '/account/orders'
     | '/auth/login'
     | '/auth/register'
@@ -246,6 +274,7 @@ export interface FileRouteTypes {
     | '/workspace/inventory'
     | '/workspace/overview'
     | '/workspace/reports'
+    | '/account/'
     | '/checkout/'
     | '/workspace/'
     | '/c/$category/'
@@ -253,11 +282,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/account'
     | '/auth'
     | '/cart'
     | '/search'
     | '/components'
+    | '/account/addresses'
+    | '/account/collection'
     | '/account/orders'
     | '/auth/login'
     | '/auth/register'
@@ -270,6 +300,7 @@ export interface FileRouteTypes {
     | '/workspace/inventory'
     | '/workspace/overview'
     | '/workspace/reports'
+    | '/account'
     | '/checkout'
     | '/workspace'
     | '/c/$category'
@@ -283,6 +314,8 @@ export interface FileRouteTypes {
     | '/cart'
     | '/search'
     | '/_dev/components'
+    | '/account/addresses'
+    | '/account/collection'
     | '/account/orders'
     | '/auth/login'
     | '/auth/register'
@@ -295,6 +328,7 @@ export interface FileRouteTypes {
     | '/workspace/inventory'
     | '/workspace/overview'
     | '/workspace/reports'
+    | '/account/'
     | '/checkout/'
     | '/workspace/'
     | '/c/$category/'
@@ -374,6 +408,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/checkout/'
       preLoaderRoute: typeof CheckoutIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/account/': {
+      id: '/account/'
+      path: '/'
+      fullPath: '/account/'
+      preLoaderRoute: typeof AccountIndexRouteImport
+      parentRoute: typeof AccountRouteRoute
     }
     '/workspace/reports': {
       id: '/workspace/reports'
@@ -459,6 +500,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountOrdersRouteImport
       parentRoute: typeof AccountRouteRoute
     }
+    '/account/collection': {
+      id: '/account/collection'
+      path: '/collection'
+      fullPath: '/account/collection'
+      preLoaderRoute: typeof AccountCollectionRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/addresses': {
+      id: '/account/addresses'
+      path: '/addresses'
+      fullPath: '/account/addresses'
+      preLoaderRoute: typeof AccountAddressesRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
     '/_dev/components': {
       id: '/_dev/components'
       path: '/components'
@@ -484,11 +539,17 @@ declare module '@tanstack/react-router' {
 }
 
 interface AccountRouteRouteChildren {
+  AccountAddressesRoute: typeof AccountAddressesRoute
+  AccountCollectionRoute: typeof AccountCollectionRoute
   AccountOrdersRoute: typeof AccountOrdersRoute
+  AccountIndexRoute: typeof AccountIndexRoute
 }
 
 const AccountRouteRouteChildren: AccountRouteRouteChildren = {
+  AccountAddressesRoute: AccountAddressesRoute,
+  AccountCollectionRoute: AccountCollectionRoute,
   AccountOrdersRoute: AccountOrdersRoute,
+  AccountIndexRoute: AccountIndexRoute,
 }
 
 const AccountRouteRouteWithChildren = AccountRouteRoute._addFileChildren(

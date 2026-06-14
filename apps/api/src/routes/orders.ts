@@ -3,6 +3,7 @@ import { and, desc, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@rocksa/db";
 import {
+  auditLog,
   orderItems,
   orders,
   specimenAttrs,
@@ -56,6 +57,24 @@ const specimenSnapshots = async (ids: string[]) => {
   );
 };
 
+const sendOrderConfirmation = async (
+  user: AuthUser,
+  order: typeof orders.$inferSelect,
+) => {
+  const payload = {
+    to: user.email,
+    reference: order.reference,
+    totalCents: order.totalCents,
+  };
+  console.info("[order-email] confirmation queued:", payload);
+  await db.insert(auditLog).values({
+    actorId: user.id,
+    action: "order_confirmation_email",
+    target: order.id,
+    payloadJson: payload,
+  });
+};
+
 ordersRouter.post("/", async (c) => {
   const user = c.get("user");
   const body = createBody.parse(await c.req.json());
@@ -94,6 +113,7 @@ ordersRouter.post("/", async (c) => {
   if (lines.length > 0) {
     await db.insert(orderItems).values(lines.map((l) => ({ orderId: order.id, ...l })));
   }
+  await sendOrderConfirmation(user, order);
   return c.json({ order });
 });
 

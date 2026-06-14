@@ -1,5 +1,8 @@
 import { Hono } from "hono";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
+import { db } from "@rocksa/db";
+import { users } from "@rocksa/db/schema";
 import {
   bearerToken,
   requireAuth,
@@ -13,6 +16,10 @@ export const meRouter = new Hono<{ Variables: { user: AuthUser } }>();
 const syncBody = z.object({
   role: z.string().optional(),
   fullName: z.string().nullable().optional(),
+});
+
+const profileBody = z.object({
+  fullName: z.string().min(1).optional(),
 });
 
 meRouter.post("/sync", async (c) => {
@@ -48,3 +55,24 @@ meRouter.post("/sync", async (c) => {
 });
 
 meRouter.get("/", requireAuth, (c) => c.json({ user: c.get("user") }));
+
+meRouter.patch("/", requireAuth, async (c) => {
+  const user = c.get("user");
+  const body = profileBody.parse(await c.req.json());
+  if (!body.fullName) return c.json({ user });
+  const updated = await db
+    .update(users)
+    .set({ fullName: body.fullName })
+    .where(eq(users.id, user.id))
+    .returning();
+  const row = updated[0]!;
+  return c.json({
+    user: {
+      id: row.id,
+      uid: row.firebaseUid,
+      email: row.email,
+      role: row.role,
+      fullName: row.fullName,
+    },
+  });
+});

@@ -2,7 +2,9 @@ import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-ro
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Button, Input } from "@rocksa/ui";
+import { useQuery } from "@tanstack/react-query";
+import { Button, Card, CardBody, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@rocksa/ui";
+import { useAuth } from "@rocksa/auth";
 import { TopNav } from "../../components/TopNav.tsx";
 import { CheckoutStepper } from "../../components/checkout/CheckoutStepper.tsx";
 import { CheckoutTrustStrip } from "../../components/checkout/CheckoutTrustStrip.tsx";
@@ -17,6 +19,7 @@ import {
 } from "../../lib/checkout-storage.ts";
 import { useCart } from "@rocksa/cart";
 import { useOrder } from "../../state/order.tsx";
+import { addressToCheckout, fetchAddresses } from "../../data/api-addresses.ts";
 
 export const Route = createFileRoute("/checkout/")({
   beforeLoad: () => {
@@ -30,7 +33,15 @@ export const Route = createFileRoute("/checkout/")({
 function Checkout() {
   const { items } = useCart();
   const { info, setInfo } = useOrder();
+  const { status, user } = useAuth();
   const navigate = useNavigate();
+  const authed = status === "authed";
+
+  const { data: addresses = [] } = useQuery({
+    queryKey: ["addresses"],
+    queryFn: fetchAddresses,
+    enabled: authed,
+  });
 
   const {
     register,
@@ -60,6 +71,12 @@ function Checkout() {
     return () => sub.unsubscribe();
   }, [watch]);
 
+  useEffect(() => {
+    if (authed && user?.email && !info.email) {
+      setInfo({ email: user.email });
+    }
+  }, [authed, user?.email, info.email, setInfo]);
+
   const onSubmit = (data: CheckoutInfoForm) => {
     setInfo(data);
     navigate({ to: "/checkout/payment" });
@@ -73,6 +90,44 @@ function Checkout() {
           <CheckoutTrustStrip />
         <form className="space-y-10" onSubmit={handleSubmit(onSubmit)} noValidate>
           <CheckoutStepper current="information" />
+
+          {!authed && (
+            <Card>
+              <CardBody className="space-y-3">
+                <p className="font-display text-xl">Continue as guest</p>
+                <p className="text-sm text-ink-500">
+                  Complete checkout without an account. Sign in to save your order history
+                  and addresses for next time.
+                </p>
+                <Button asChild size="sm" variant="secondary">
+                  <Link to="/auth/login">Sign in for order history</Link>
+                </Button>
+              </CardBody>
+            </Card>
+          )}
+
+          {authed && addresses.length > 0 && (
+            <section>
+              <Label htmlFor="saved-address">Saved address</Label>
+              <Select
+                onValueChange={(id) => {
+                  const a = addresses.find((row) => row.id === id);
+                  if (a) setInfo(addressToCheckout(a));
+                }}
+              >
+                <SelectTrigger id="saved-address" className="mt-2">
+                  <SelectValue placeholder="Choose a saved address" />
+                </SelectTrigger>
+                <SelectContent>
+                  {addresses.map((a) => (
+                    <SelectItem key={a.id} value={a.id}>
+                      {a.firstName} {a.lastName} — {a.city}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </section>
+          )}
 
           {errors.root && (
             <p className="text-sm text-red-600" role="alert">

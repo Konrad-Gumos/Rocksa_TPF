@@ -3,6 +3,7 @@ import { Badge } from "@rocksa/ui";
 import { formatPrice, isPurchasable, type Specimen } from "@rocksa/domain";
 import { PlusIcon, StarIcon } from "./Icons.tsx";
 import { useCart } from "@rocksa/cart";
+import { useWishlist } from "../state/wishlist.tsx";
 import { saveListingScroll } from "../lib/listing-scroll.ts";
 import type { ListingSearch } from "../lib/listing-search.ts";
 
@@ -20,7 +21,9 @@ export const ProductCard = ({
   listingSearch,
 }: Props) => {
   const { add } = useCart();
+  const { isSaved, toggle } = useWishlist();
   const purchasable = isPurchasable(specimen.stockStatus);
+  const saved = isSaved(specimen.id);
 
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-md border border-ink-700/5 bg-white">
@@ -32,6 +35,20 @@ export const ProductCard = ({
         onClick={() => saveListingScroll()}
         className="relative block aspect-square overflow-hidden bg-surface-soft"
       >
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            toggle(specimen.id);
+          }}
+          aria-label={saved ? "Remove from collection" : "Save to collection"}
+          className={
+            "absolute right-3 top-3 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/90 " +
+            (saved ? "text-brand-600" : "text-ink-400 hover:text-brand-600")
+          }
+        >
+          <StarIcon className="h-4 w-4" />
+        </button>
         {specimen.stockStatus === "low_stock" && (
           <Badge tone="brand" className="absolute left-3 top-3 z-10">
             LOW STOCK

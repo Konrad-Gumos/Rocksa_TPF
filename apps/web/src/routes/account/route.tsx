@@ -1,6 +1,7 @@
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 import { RequireAuth } from "@rocksa/auth";
 import { TopNav } from "../../components/TopNav.tsx";
+import { AccountSidebar } from "../../components/AccountSidebar.tsx";
 
 export const Route = createFileRoute("/account")({
   beforeLoad: ({ context }) => {
@@ -10,7 +11,10 @@ export const Route = createFileRoute("/account")({
     <RequireAuth>
       <div className="min-h-screen">
         <TopNav />
-        <Outlet />
+        <div className="flex">
+          <AccountSidebar />
+          <Outlet />
+        </div>
       </div>
     </RequireAuth>
   ),

@@ -1,6 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
-import { Avatar, Button, Input } from "@rocksa/ui";
+import { Button, Input } from "@rocksa/ui";
 import { useAuth } from "@rocksa/auth";
 import { BellIcon, CartIcon, HelpIcon, SearchIcon } from "./Icons.tsx";
 import { useCartCount } from "@rocksa/cart";
@@ -16,20 +16,9 @@ const NAV_LINKS = [
   { label: "Journal", href: "#" },
 ] as const;
 
-const initials = (name: string | null | undefined): string => {
-  if (!name) return "JC";
-  return (
-    name
-      .split(/\s+/)
-      .map((part) => part[0]?.toUpperCase() ?? "")
-      .join("")
-      .slice(0, 2) || "JC"
-  );
-};
-
 export const TopNav = ({ variant = "full" }: Props) => {
   const count = useCartCount();
-  const { user, status, signOut } = useAuth();
+  const { status, signOut } = useAuth();
   const navigate = useNavigate();
   const routerSearch = useRouterState({
     select: (s) => (s.location.pathname === "/search" ? s.location.search : {}),
@@ -66,7 +55,6 @@ export const TopNav = ({ variant = "full" }: Props) => {
   }
 
   const authed = status === "authed";
-  const label = user?.displayName ?? user?.email ?? null;
 
   return (
     <header className="border-b border-ink-700/5 bg-surface-muted">
@@ -122,7 +110,9 @@ export const TopNav = ({ variant = "full" }: Props) => {
             <HelpIcon />
           </button>
           {authed && (
-            <Avatar fallback={initials(label)} className="ml-1" title={label ?? undefined} />
+            <Button asChild size="sm" variant="secondary" className="ml-2">
+              <Link to="/account">Account</Link>
+            </Button>
           )}
         </nav>
 
