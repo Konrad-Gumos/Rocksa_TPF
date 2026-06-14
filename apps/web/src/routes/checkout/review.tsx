@@ -15,7 +15,7 @@ import {
   readStoredPaymentInfo,
 } from "../../lib/checkout-storage.ts";
 import { LockIcon, ShieldIcon } from "../../components/Icons.tsx";
-import { useCart } from "../../state/cart.tsx";
+import { useCart } from "@rocksa/cart";
 import { useOrder } from "../../state/order.tsx";
 
 export const Route = createFileRoute("/checkout/review")({

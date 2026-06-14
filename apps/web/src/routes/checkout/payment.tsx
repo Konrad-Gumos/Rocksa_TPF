@@ -26,7 +26,7 @@ import {
   readStoredCheckoutInfo,
   writeStoredPaymentInfo,
 } from "../../lib/checkout-storage.ts";
-import { useCart } from "../../state/cart.tsx";
+import { useCart } from "@rocksa/cart";
 import { useOrder } from "../../state/order.tsx";
 
 export const Route = createFileRoute("/checkout/payment")({
