@@ -23,6 +23,7 @@ import {
 import { TopNav } from "../../../../components/TopNav.tsx";
 import { ProductCard } from "../../../../components/ProductCard.tsx";
 import { useCart } from "@rocksa/cart";
+import { restoreListingScroll } from "../../../../lib/listing-scroll.ts";
 
 const titleCase = (s: string) => s[0]!.toUpperCase() + s.slice(1);
 
@@ -207,8 +208,10 @@ function ProductRoute() {
   );
 
   if (modal) {
-    const close = () =>
+    const close = () => {
+      restoreListingScroll();
       navigate({ to: "/c/$category", params: { category }, search: {} });
+    };
     return (
       <>
         <CategoryListing

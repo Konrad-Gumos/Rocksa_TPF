@@ -15,7 +15,13 @@ export const RequireAuth = ({
 }: Props) => {
   const { status, profile } = useAuth();
 
-  if (status === "loading") return null;
+  if (status === "loading") {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-surface-muted">
+        <p className="text-sm text-ink-500">Loading session…</p>
+      </main>
+    );
+  }
   if (status === "anon") return <Navigate to={fallbackTo} />;
   if (roles && profile && !roles.includes(profile.role)) {
     return <Navigate to="/" />;

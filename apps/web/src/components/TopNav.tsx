@@ -4,6 +4,7 @@ import { Button, Input } from "@rocksa/ui";
 import { useAuth } from "@rocksa/auth";
 import { BellIcon, CartIcon, HelpIcon, SearchIcon } from "./Icons.tsx";
 import { useCartCount } from "@rocksa/cart";
+import { MobileNav } from "./MobileNav.tsx";
 
 interface Props {
   variant?: "full" | "minimal";
@@ -63,6 +64,8 @@ export const TopNav = ({ variant = "full" }: Props) => {
           Rocksa
         </Link>
 
+        <MobileNav />
+
         <nav className="hidden items-center gap-8 font-display text-lg md:flex">
           {NAV_LINKS.map((link) => (
             <Link key={link.label} to={link.to} className="text-ink-900">
@@ -100,9 +103,13 @@ export const TopNav = ({ variant = "full" }: Props) => {
           <button className="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-brand-50">
             <BellIcon />
           </button>
-          <button className="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-brand-50">
+          <Link
+            to="/journal"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-brand-50"
+            aria-label="Help and journal"
+          >
             <HelpIcon />
-          </button>
+          </Link>
           {authed && (
             <Button asChild size="sm" variant="secondary" className="ml-2">
               <Link to="/account">Account</Link>

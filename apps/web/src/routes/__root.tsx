@@ -5,6 +5,7 @@ import { CartProvider } from "@rocksa/cart";
 import { Button, Card, CardBody } from "@rocksa/ui";
 import { OrderProvider } from "../state/order.tsx";
 import { WishlistProvider } from "../state/wishlist.tsx";
+import { ApiOfflineBanner } from "../components/ApiOfflineBanner.tsx";
 
 export interface RouterContext {
   queryClient: QueryClient;
@@ -23,6 +24,7 @@ function RootLayout() {
       <OrderProvider>
         <WishlistProvider>
           <div className="min-h-screen text-ink-900">
+            <ApiOfflineBanner />
             <Outlet />
           </div>
         </WishlistProvider>

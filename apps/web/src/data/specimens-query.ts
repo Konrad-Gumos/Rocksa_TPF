@@ -44,6 +44,13 @@ export const fetchAllSpecimens = async (): Promise<Specimen[]> => {
   return res ? res.items.map(normalizeSpecimen) : SPECIMENS;
 };
 
+export const isApiCatalogLive = async (): Promise<boolean> => {
+  const res = await apiOptional<{ items: SpecimenRow[] }>("/v1/specimens", {
+    auth: false,
+  });
+  return res !== null;
+};
+
 export const fetchSpecimen = async (
   slug: string,
 ): Promise<Specimen | undefined> => {
