@@ -2,14 +2,14 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Button, Card, CardBody, Input, Label, Separator } from "@rocksa/ui";
 import { formatPrice } from "@rocksa/domain";
 import { TopNav } from "../../components/TopNav.tsx";
-import { useCart } from "../../state/cart.tsx";
+import { useCart } from "@rocksa/cart";
 import { useOrder } from "../../state/order.tsx";
 import { useSpecimenLookup } from "../../data/api-specimens.ts";
 
 export const Route = createFileRoute("/checkout/")({ component: Checkout });
 
 function Checkout() {
-  const { items, subtotalCents } = useCart();
+  const { items, subtotal } = useCart();
   const { info, setInfo } = useOrder();
   const navigate = useNavigate();
   const findSpecimenById = useSpecimenLookup();
@@ -124,12 +124,10 @@ function Checkout() {
           <section>
             <h2 className="font-display text-3xl">Delivery method</h2>
             <div className="mt-4 space-y-2">
-              {(
-                [
-                  ["standard", "Standard Secure Shipping", "Free"],
-                  ["express", "Express Insured Courier", "$150.00"],
-                ] as const
-              ).map(([key, label, price]) => (
+              {([
+                ["standard", "Standard Secure Shipping", "Free"],
+                ["express", "Express Insured Courier", "$150.00"],
+              ] as const).map(([key, label, price]) => (
                 <label
                   key={key}
                   className={
@@ -192,10 +190,7 @@ function Checkout() {
                       {Object.entries(firstSpecimen.attributes)
                         .slice(0, 2)
                         .map(([, v]) => (
-                          <span
-                            key={v}
-                            className="rounded bg-brand-50 px-1.5 py-0.5 text-brand-700"
-                          >
+                          <span key={v} className="rounded bg-brand-50 px-1.5 py-0.5 text-brand-700">
                             {v}
                           </span>
                         ))}
@@ -206,14 +201,12 @@ function Checkout() {
               )}
               <div className="flex items-center gap-2">
                 <Input placeholder="Gift card or discount code" />
-                <Button variant="secondary" size="sm">
-                  Apply
-                </Button>
+                <Button variant="secondary" size="sm">Apply</Button>
               </div>
               <Separator />
               <div className="flex justify-between text-sm">
                 <span>Subtotal</span>
-                <span>{formatPrice(subtotalCents)}</span>
+                <span>{formatPrice(subtotal)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span>Shipping</span>
@@ -223,8 +216,10 @@ function Checkout() {
               <div className="flex items-baseline justify-between">
                 <Label>Total</Label>
                 <p className="font-display text-3xl">
-                  <span className="text-xs uppercase tracking-wider text-ink-500 mr-2">USD</span>
-                  {formatPrice(subtotalCents)}
+                  <span className="text-xs uppercase tracking-wider text-ink-500 mr-2">
+                    USD
+                  </span>
+                  {formatPrice(subtotal)}
                 </p>
               </div>
             </CardBody>
