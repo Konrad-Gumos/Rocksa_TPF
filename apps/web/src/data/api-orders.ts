@@ -17,10 +17,23 @@ export interface ServerOrder extends CreateOrderInput {
 interface ServerOrderRow {
   id: string;
   reference: string;
+  status: string;
   subtotalCents: number;
   shippingCents: number;
   totalCents: number;
   createdAt: string;
+}
+
+export interface ServerOrderItem {
+  specimenId: string;
+  qty: number;
+  unitPriceCents: number;
+  snapshotJson: Record<string, unknown>;
+}
+
+export interface FetchedOrder extends ServerOrder {
+  status: string;
+  items: ServerOrderItem[];
 }
 
 export const createServerOrder = async (input: CreateOrderInput): Promise<ServerOrder | null> => {
@@ -40,6 +53,28 @@ export const createServerOrder = async (input: CreateOrderInput): Promise<Server
     reference: res.order.reference,
     createdAt: res.order.createdAt,
   };
+};
+
+export const fetchOrder = async (orderId: string): Promise<FetchedOrder | null> => {
+  const res = await apiOptional<{ order: ServerOrderRow; items: ServerOrderItem[] }>(
+    `/v1/orders/${orderId}`,
+  );
+  if (!res) return null;
+  return {
+    id: res.order.id,
+    reference: res.order.reference,
+    status: res.order.status,
+    subtotalCents: res.order.subtotalCents,
+    shippingCents: res.order.shippingCents,
+    totalCents: res.order.totalCents,
+    createdAt: res.order.createdAt,
+    items: res.items,
+  };
+};
+
+export const fetchOrders = async (): Promise<ServerOrderRow[]> => {
+  const res = await apiOptional<{ orders: ServerOrderRow[] }>("/v1/orders");
+  return res?.orders ?? [];
 };
 
 // Fallback for unauthenticated/local-only mode.
