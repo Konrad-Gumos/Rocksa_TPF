@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as WorkspaceRouteRouteImport } from './routes/workspace/route'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
@@ -32,6 +33,11 @@ import { Route as DevComponentsRouteImport } from './routes/_dev/components'
 import { Route as CCategoryIndexRouteImport } from './routes/c/$category/index'
 import { Route as CCategoryPSlugRouteImport } from './routes/c/$category/p/$slug'
 
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CartRoute = CartRouteImport.update({
   id: '/cart',
   path: '/cart',
@@ -149,6 +155,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
   '/workspace': typeof WorkspaceRouteRouteWithChildren
   '/cart': typeof CartRoute
+  '/search': typeof SearchRoute
   '/components': typeof DevComponentsRoute
   '/account/orders': typeof AccountOrdersRoute
   '/auth/login': typeof AuthLoginRoute
@@ -172,6 +179,7 @@ export interface FileRoutesByTo {
   '/account': typeof AccountRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/cart': typeof CartRoute
+  '/search': typeof SearchRoute
   '/components': typeof DevComponentsRoute
   '/account/orders': typeof AccountOrdersRoute
   '/auth/login': typeof AuthLoginRoute
@@ -197,6 +205,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteRouteWithChildren
   '/workspace': typeof WorkspaceRouteRouteWithChildren
   '/cart': typeof CartRoute
+  '/search': typeof SearchRoute
   '/_dev/components': typeof DevComponentsRoute
   '/account/orders': typeof AccountOrdersRoute
   '/auth/login': typeof AuthLoginRoute
@@ -223,6 +232,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/workspace'
     | '/cart'
+    | '/search'
     | '/components'
     | '/account/orders'
     | '/auth/login'
@@ -246,6 +256,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/auth'
     | '/cart'
+    | '/search'
     | '/components'
     | '/account/orders'
     | '/auth/login'
@@ -270,6 +281,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/workspace'
     | '/cart'
+    | '/search'
     | '/_dev/components'
     | '/account/orders'
     | '/auth/login'
@@ -295,6 +307,7 @@ export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   WorkspaceRouteRoute: typeof WorkspaceRouteRouteWithChildren
   CartRoute: typeof CartRoute
+  SearchRoute: typeof SearchRoute
   DevComponentsRoute: typeof DevComponentsRoute
   CheckoutPaymentRoute: typeof CheckoutPaymentRoute
   CheckoutReviewRoute: typeof CheckoutReviewRoute
@@ -306,6 +319,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cart': {
       id: '/cart'
       path: '/cart'
@@ -519,6 +539,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
   WorkspaceRouteRoute: WorkspaceRouteRouteWithChildren,
   CartRoute: CartRoute,
+  SearchRoute: SearchRoute,
   DevComponentsRoute: DevComponentsRoute,
   CheckoutPaymentRoute: CheckoutPaymentRoute,
   CheckoutReviewRoute: CheckoutReviewRoute,

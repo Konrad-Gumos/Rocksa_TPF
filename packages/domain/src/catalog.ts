@@ -55,6 +55,21 @@ export const applyListing = (
   sort: ListingSort = "newest",
 ): Specimen[] => sortSpecimens(filterSpecimens(items, filters), sort);
 
+export const searchSpecimens = (
+  items: ReadonlyArray<Specimen>,
+  query: string,
+): Specimen[] => {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+  return items.filter((s) => {
+    if (s.name.toLowerCase().includes(q)) return true;
+    if (s.description.toLowerCase().includes(q)) return true;
+    if (s.subcategory?.toLowerCase().includes(q)) return true;
+    if (s.category.toLowerCase().includes(q)) return true;
+    return Object.values(s.attributes).some((v) => v.toLowerCase().includes(q));
+  });
+};
+
 export const attributeValues = (
   items: ReadonlyArray<Specimen>,
   key: string,

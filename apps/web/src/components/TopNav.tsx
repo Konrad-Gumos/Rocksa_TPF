@@ -1,4 +1,5 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { useState, type FormEvent } from "react";
 import { Avatar, Button, Input } from "@rocksa/ui";
 import { useAuth } from "@rocksa/auth";
 import { BellIcon, CartIcon, HelpIcon, SearchIcon } from "./Icons.tsx";
@@ -30,6 +31,24 @@ export const TopNav = ({ variant = "full" }: Props) => {
   const count = useCartCount();
   const { user, status, signOut } = useAuth();
   const navigate = useNavigate();
+  const routerSearch = useRouterState({
+    select: (s) => (s.location.pathname === "/search" ? s.location.search : {}),
+  });
+  const initialQuery =
+    typeof routerSearch === "object" &&
+    routerSearch !== null &&
+    "q" in routerSearch &&
+    typeof routerSearch.q === "string"
+      ? routerSearch.q
+      : "";
+  const [query, setQuery] = useState(initialQuery);
+
+  const submitSearch = (e: FormEvent) => {
+    e.preventDefault();
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    navigate({ to: "/search", search: { q: trimmed } });
+  };
 
   if (variant === "minimal") {
     return (
@@ -70,10 +89,19 @@ export const TopNav = ({ variant = "full" }: Props) => {
           )}
         </nav>
 
-        <div className="relative mx-auto hidden max-w-xl flex-1 lg:block">
+        <form
+          onSubmit={submitSearch}
+          className="relative mx-auto hidden max-w-xl flex-1 lg:block"
+        >
           <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" />
-          <Input placeholder="Search collection…" className="pl-10 bg-white/80 border-ink-700/5" />
-        </div>
+          <Input
+            placeholder="Search collection…"
+            className="pl-10 bg-white/80 border-ink-700/5"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search collection"
+          />
+        </form>
 
         <nav className="flex items-center gap-2 text-brand-600">
           <Link
