@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as CartRouteImport } from './routes/cart'
+import { Route as WorkspaceRouteRouteImport } from './routes/workspace/route'
+import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorkspaceIndexRouteImport } from './routes/workspace/index'
 import { Route as CheckoutIndexRouteImport } from './routes/checkout/index'
@@ -18,7 +20,6 @@ import { Route as WorkspaceOverviewRouteImport } from './routes/workspace/overvi
 import { Route as WorkspaceInventoryRouteImport } from './routes/workspace/inventory'
 import { Route as WorkspaceAnalyticsRouteImport } from './routes/workspace/analytics'
 import { Route as WorkspaceAcquisitionsRouteImport } from './routes/workspace/acquisitions'
-import { Route as Workspace_layoutRouteImport } from './routes/workspace/__layout'
 import { Route as OrdersOrderIdRouteImport } from './routes/orders/$orderId'
 import { Route as CheckoutPaymentRouteImport } from './routes/checkout/payment'
 import { Route as AuthResetRouteImport } from './routes/auth/reset'
@@ -33,15 +34,25 @@ const CartRoute = CartRouteImport.update({
   path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkspaceRouteRoute = WorkspaceRouteRouteImport.update({
+  id: '/workspace',
+  path: '/workspace',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WorkspaceIndexRoute = WorkspaceIndexRouteImport.update({
-  id: '/workspace/',
-  path: '/workspace/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => WorkspaceRouteRoute,
 } as any)
 const CheckoutIndexRoute = CheckoutIndexRouteImport.update({
   id: '/checkout/',
@@ -49,34 +60,29 @@ const CheckoutIndexRoute = CheckoutIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const WorkspaceReportsRoute = WorkspaceReportsRouteImport.update({
-  id: '/workspace/reports',
-  path: '/workspace/reports',
-  getParentRoute: () => rootRouteImport,
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => WorkspaceRouteRoute,
 } as any)
 const WorkspaceOverviewRoute = WorkspaceOverviewRouteImport.update({
-  id: '/workspace/overview',
-  path: '/workspace/overview',
-  getParentRoute: () => rootRouteImport,
+  id: '/overview',
+  path: '/overview',
+  getParentRoute: () => WorkspaceRouteRoute,
 } as any)
 const WorkspaceInventoryRoute = WorkspaceInventoryRouteImport.update({
-  id: '/workspace/inventory',
-  path: '/workspace/inventory',
-  getParentRoute: () => rootRouteImport,
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => WorkspaceRouteRoute,
 } as any)
 const WorkspaceAnalyticsRoute = WorkspaceAnalyticsRouteImport.update({
-  id: '/workspace/analytics',
-  path: '/workspace/analytics',
-  getParentRoute: () => rootRouteImport,
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => WorkspaceRouteRoute,
 } as any)
 const WorkspaceAcquisitionsRoute = WorkspaceAcquisitionsRouteImport.update({
-  id: '/workspace/acquisitions',
-  path: '/workspace/acquisitions',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Workspace_layoutRoute = Workspace_layoutRouteImport.update({
-  id: '/workspace/__layout',
-  path: '/workspace',
-  getParentRoute: () => rootRouteImport,
+  id: '/acquisitions',
+  path: '/acquisitions',
+  getParentRoute: () => WorkspaceRouteRoute,
 } as any)
 const OrdersOrderIdRoute = OrdersOrderIdRouteImport.update({
   id: '/orders/$orderId',
@@ -89,19 +95,19 @@ const CheckoutPaymentRoute = CheckoutPaymentRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthResetRoute = AuthResetRouteImport.update({
-  id: '/auth/reset',
-  path: '/auth/reset',
-  getParentRoute: () => rootRouteImport,
+  id: '/reset',
+  path: '/reset',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
-  id: '/auth/register',
-  path: '/auth/register',
-  getParentRoute: () => rootRouteImport,
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/auth/login',
-  path: '/auth/login',
-  getParentRoute: () => rootRouteImport,
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const DevComponentsRoute = DevComponentsRouteImport.update({
   id: '/_dev/components',
@@ -121,6 +127,8 @@ const CCategoryPSlugRoute = CCategoryPSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteRouteWithChildren
+  '/workspace': typeof WorkspaceRouteRouteWithChildren
   '/cart': typeof CartRoute
   '/components': typeof DevComponentsRoute
   '/auth/login': typeof AuthLoginRoute
@@ -128,7 +136,6 @@ export interface FileRoutesByFullPath {
   '/auth/reset': typeof AuthResetRoute
   '/checkout/payment': typeof CheckoutPaymentRoute
   '/orders/$orderId': typeof OrdersOrderIdRoute
-  '/workspace': typeof Workspace_layoutRoute
   '/workspace/acquisitions': typeof WorkspaceAcquisitionsRoute
   '/workspace/analytics': typeof WorkspaceAnalyticsRoute
   '/workspace/inventory': typeof WorkspaceInventoryRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteRouteWithChildren
   '/cart': typeof CartRoute
   '/components': typeof DevComponentsRoute
   '/auth/login': typeof AuthLoginRoute
@@ -148,19 +156,21 @@ export interface FileRoutesByTo {
   '/auth/reset': typeof AuthResetRoute
   '/checkout/payment': typeof CheckoutPaymentRoute
   '/orders/$orderId': typeof OrdersOrderIdRoute
-  '/workspace': typeof WorkspaceIndexRoute
   '/workspace/acquisitions': typeof WorkspaceAcquisitionsRoute
   '/workspace/analytics': typeof WorkspaceAnalyticsRoute
   '/workspace/inventory': typeof WorkspaceInventoryRoute
   '/workspace/overview': typeof WorkspaceOverviewRoute
   '/workspace/reports': typeof WorkspaceReportsRoute
   '/checkout': typeof CheckoutIndexRoute
+  '/workspace': typeof WorkspaceIndexRoute
   '/c/$category': typeof CCategoryIndexRoute
   '/c/$category/p/$slug': typeof CCategoryPSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteRouteWithChildren
+  '/workspace': typeof WorkspaceRouteRouteWithChildren
   '/cart': typeof CartRoute
   '/_dev/components': typeof DevComponentsRoute
   '/auth/login': typeof AuthLoginRoute
@@ -168,7 +178,6 @@ export interface FileRoutesById {
   '/auth/reset': typeof AuthResetRoute
   '/checkout/payment': typeof CheckoutPaymentRoute
   '/orders/$orderId': typeof OrdersOrderIdRoute
-  '/workspace/__layout': typeof Workspace_layoutRoute
   '/workspace/acquisitions': typeof WorkspaceAcquisitionsRoute
   '/workspace/analytics': typeof WorkspaceAnalyticsRoute
   '/workspace/inventory': typeof WorkspaceInventoryRoute
@@ -183,6 +192,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
+    | '/workspace'
     | '/cart'
     | '/components'
     | '/auth/login'
@@ -190,7 +201,6 @@ export interface FileRouteTypes {
     | '/auth/reset'
     | '/checkout/payment'
     | '/orders/$orderId'
-    | '/workspace'
     | '/workspace/acquisitions'
     | '/workspace/analytics'
     | '/workspace/inventory'
@@ -203,6 +213,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/cart'
     | '/components'
     | '/auth/login'
@@ -210,18 +221,20 @@ export interface FileRouteTypes {
     | '/auth/reset'
     | '/checkout/payment'
     | '/orders/$orderId'
-    | '/workspace'
     | '/workspace/acquisitions'
     | '/workspace/analytics'
     | '/workspace/inventory'
     | '/workspace/overview'
     | '/workspace/reports'
     | '/checkout'
+    | '/workspace'
     | '/c/$category'
     | '/c/$category/p/$slug'
   id:
     | '__root__'
     | '/'
+    | '/auth'
+    | '/workspace'
     | '/cart'
     | '/_dev/components'
     | '/auth/login'
@@ -229,7 +242,6 @@ export interface FileRouteTypes {
     | '/auth/reset'
     | '/checkout/payment'
     | '/orders/$orderId'
-    | '/workspace/__layout'
     | '/workspace/acquisitions'
     | '/workspace/analytics'
     | '/workspace/inventory'
@@ -243,21 +255,13 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  WorkspaceRouteRoute: typeof WorkspaceRouteRouteWithChildren
   CartRoute: typeof CartRoute
   DevComponentsRoute: typeof DevComponentsRoute
-  AuthLoginRoute: typeof AuthLoginRoute
-  AuthRegisterRoute: typeof AuthRegisterRoute
-  AuthResetRoute: typeof AuthResetRoute
   CheckoutPaymentRoute: typeof CheckoutPaymentRoute
   OrdersOrderIdRoute: typeof OrdersOrderIdRoute
-  Workspace_layoutRoute: typeof Workspace_layoutRoute
-  WorkspaceAcquisitionsRoute: typeof WorkspaceAcquisitionsRoute
-  WorkspaceAnalyticsRoute: typeof WorkspaceAnalyticsRoute
-  WorkspaceInventoryRoute: typeof WorkspaceInventoryRoute
-  WorkspaceOverviewRoute: typeof WorkspaceOverviewRoute
-  WorkspaceReportsRoute: typeof WorkspaceReportsRoute
   CheckoutIndexRoute: typeof CheckoutIndexRoute
-  WorkspaceIndexRoute: typeof WorkspaceIndexRoute
   CCategoryIndexRoute: typeof CCategoryIndexRoute
   CCategoryPSlugRoute: typeof CCategoryPSlugRoute
 }
@@ -271,6 +275,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/workspace': {
+      id: '/workspace'
+      path: '/workspace'
+      fullPath: '/workspace'
+      preLoaderRoute: typeof WorkspaceRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -280,10 +298,10 @@ declare module '@tanstack/react-router' {
     }
     '/workspace/': {
       id: '/workspace/'
-      path: '/workspace'
+      path: '/'
       fullPath: '/workspace/'
       preLoaderRoute: typeof WorkspaceIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
     }
     '/checkout/': {
       id: '/checkout/'
@@ -294,45 +312,38 @@ declare module '@tanstack/react-router' {
     }
     '/workspace/reports': {
       id: '/workspace/reports'
-      path: '/workspace/reports'
+      path: '/reports'
       fullPath: '/workspace/reports'
       preLoaderRoute: typeof WorkspaceReportsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
     }
     '/workspace/overview': {
       id: '/workspace/overview'
-      path: '/workspace/overview'
+      path: '/overview'
       fullPath: '/workspace/overview'
       preLoaderRoute: typeof WorkspaceOverviewRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
     }
     '/workspace/inventory': {
       id: '/workspace/inventory'
-      path: '/workspace/inventory'
+      path: '/inventory'
       fullPath: '/workspace/inventory'
       preLoaderRoute: typeof WorkspaceInventoryRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
     }
     '/workspace/analytics': {
       id: '/workspace/analytics'
-      path: '/workspace/analytics'
+      path: '/analytics'
       fullPath: '/workspace/analytics'
       preLoaderRoute: typeof WorkspaceAnalyticsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
     }
     '/workspace/acquisitions': {
       id: '/workspace/acquisitions'
-      path: '/workspace/acquisitions'
+      path: '/acquisitions'
       fullPath: '/workspace/acquisitions'
       preLoaderRoute: typeof WorkspaceAcquisitionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/workspace/__layout': {
-      id: '/workspace/__layout'
-      path: '/workspace'
-      fullPath: '/workspace'
-      preLoaderRoute: typeof Workspace_layoutRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof WorkspaceRouteRoute
     }
     '/orders/$orderId': {
       id: '/orders/$orderId'
@@ -350,24 +361,24 @@ declare module '@tanstack/react-router' {
     }
     '/auth/reset': {
       id: '/auth/reset'
-      path: '/auth/reset'
+      path: '/reset'
       fullPath: '/auth/reset'
       preLoaderRoute: typeof AuthResetRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/auth/register': {
       id: '/auth/register'
-      path: '/auth/register'
+      path: '/register'
       fullPath: '/auth/register'
       preLoaderRoute: typeof AuthRegisterRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/auth/login': {
       id: '/auth/login'
-      path: '/auth/login'
+      path: '/login'
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/_dev/components': {
       id: '/_dev/components'
@@ -393,23 +404,53 @@ declare module '@tanstack/react-router' {
   }
 }
 
-const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  CartRoute: CartRoute,
-  DevComponentsRoute: DevComponentsRoute,
+interface AuthRouteRouteChildren {
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthRegisterRoute: typeof AuthRegisterRoute
+  AuthResetRoute: typeof AuthResetRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   AuthResetRoute: AuthResetRoute,
-  CheckoutPaymentRoute: CheckoutPaymentRoute,
-  OrdersOrderIdRoute: OrdersOrderIdRoute,
-  Workspace_layoutRoute: Workspace_layoutRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
+interface WorkspaceRouteRouteChildren {
+  WorkspaceAcquisitionsRoute: typeof WorkspaceAcquisitionsRoute
+  WorkspaceAnalyticsRoute: typeof WorkspaceAnalyticsRoute
+  WorkspaceInventoryRoute: typeof WorkspaceInventoryRoute
+  WorkspaceOverviewRoute: typeof WorkspaceOverviewRoute
+  WorkspaceReportsRoute: typeof WorkspaceReportsRoute
+  WorkspaceIndexRoute: typeof WorkspaceIndexRoute
+}
+
+const WorkspaceRouteRouteChildren: WorkspaceRouteRouteChildren = {
   WorkspaceAcquisitionsRoute: WorkspaceAcquisitionsRoute,
   WorkspaceAnalyticsRoute: WorkspaceAnalyticsRoute,
   WorkspaceInventoryRoute: WorkspaceInventoryRoute,
   WorkspaceOverviewRoute: WorkspaceOverviewRoute,
   WorkspaceReportsRoute: WorkspaceReportsRoute,
-  CheckoutIndexRoute: CheckoutIndexRoute,
   WorkspaceIndexRoute: WorkspaceIndexRoute,
+}
+
+const WorkspaceRouteRouteWithChildren = WorkspaceRouteRoute._addFileChildren(
+  WorkspaceRouteRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
+  WorkspaceRouteRoute: WorkspaceRouteRouteWithChildren,
+  CartRoute: CartRoute,
+  DevComponentsRoute: DevComponentsRoute,
+  CheckoutPaymentRoute: CheckoutPaymentRoute,
+  OrdersOrderIdRoute: OrdersOrderIdRoute,
+  CheckoutIndexRoute: CheckoutIndexRoute,
   CCategoryIndexRoute: CCategoryIndexRoute,
   CCategoryPSlugRoute: CCategoryPSlugRoute,
 }

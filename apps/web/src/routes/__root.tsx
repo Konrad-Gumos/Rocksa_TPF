@@ -1,12 +1,13 @@
 import { Link, Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import type { QueryClient } from "@tanstack/react-query";
-import { AuthProvider } from "@rocksa/auth";
+import type { AuthValue } from "@rocksa/auth";
 import { Button, Card, CardBody } from "@rocksa/ui";
 import { CartProvider } from "../state/cart.tsx";
 import { OrderProvider } from "../state/order.tsx";
 
-interface RouterContext {
+export interface RouterContext {
   queryClient: QueryClient;
+  auth: AuthValue;
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
@@ -17,15 +18,13 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 function RootLayout() {
   return (
-    <AuthProvider>
-      <CartProvider>
-        <OrderProvider>
-          <div className="min-h-screen text-ink-900">
-            <Outlet />
-          </div>
-        </OrderProvider>
-      </CartProvider>
-    </AuthProvider>
+    <CartProvider>
+      <OrderProvider>
+        <div className="min-h-screen text-ink-900">
+          <Outlet />
+        </div>
+      </OrderProvider>
+    </CartProvider>
   );
 }
 
