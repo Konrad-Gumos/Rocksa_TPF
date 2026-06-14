@@ -22,10 +22,7 @@ const addressBody = z.object({
 
 addressesRouter.get("/", async (c) => {
   const user = c.get("user");
-  const rows = await db
-    .select()
-    .from(addresses)
-    .where(eq(addresses.userId, user.id));
+  const rows = await db.select().from(addresses).where(eq(addresses.userId, user.id));
   return c.json({ addresses: rows });
 });
 
@@ -53,8 +50,6 @@ addressesRouter.post("/", async (c) => {
 addressesRouter.delete("/:id", async (c) => {
   const user = c.get("user");
   const id = c.req.param("id");
-  await db
-    .delete(addresses)
-    .where(and(eq(addresses.id, id), eq(addresses.userId, user.id)));
+  await db.delete(addresses).where(and(eq(addresses.id, id), eq(addresses.userId, user.id)));
   return c.json({ ok: true });
 });

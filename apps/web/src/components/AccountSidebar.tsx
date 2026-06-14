@@ -1,6 +1,7 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useAuth } from "@rocksa/auth";
 import { DiamondIcon, DocIcon } from "./Icons.tsx";
+import { stickySidebarClassName } from "../lib/layout.ts";
 
 const LINKS = [
   { label: "Account", to: "/account" as const },
@@ -14,7 +15,11 @@ export const AccountSidebar = () => {
   const { user, profile, signOut } = useAuth();
 
   return (
-    <aside className="w-60 shrink-0 border-r border-ink-700/5 bg-surface-muted p-6">
+    <aside
+      className={
+        "w-60 shrink-0 border-r border-ink-700/5 bg-surface-muted p-6 " + stickySidebarClassName
+      }
+    >
       <div className="mb-8">
         <p className="font-display text-xl text-ink-900">Your Account</p>
         <p className="mt-1 text-xs text-ink-500">

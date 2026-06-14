@@ -15,9 +15,7 @@ export const users = pgTable("users", {
   email: text("email").notNull(),
   fullName: text("full_name"),
   role: text("role").notNull().default("buyer"),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export const specimens = pgTable(
@@ -34,9 +32,7 @@ export const specimens = pgTable(
     stockStatus: text("stock_status").notNull().default("in_stock"),
     originCountry: text("origin_country"),
     imageUrl: text("image_url").notNull().default(""),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => ({
     categoryIdx: index("specimens_category_idx").on(t.category),
@@ -84,12 +80,8 @@ export const carts = pgTable("carts", {
   userId: uuid("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export const cartItems = pgTable(
@@ -118,9 +110,7 @@ export const orders = pgTable("orders", {
   subtotalCents: integer("subtotal_cents").notNull(),
   shippingCents: integer("shipping_cents").notNull().default(0),
   totalCents: integer("total_cents").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export const orderItems = pgTable(
@@ -134,9 +124,7 @@ export const orderItems = pgTable(
       .references(() => specimens.id, { onDelete: "cascade" }),
     qty: integer("qty").notNull(),
     unitPriceCents: integer("unit_price_cents").notNull(),
-    snapshotJson: jsonb("snapshot_json")
-      .$type<Record<string, unknown>>()
-      .notNull(),
+    snapshotJson: jsonb("snapshot_json").$type<Record<string, unknown>>().notNull(),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.orderId, t.specimenId] }),
@@ -173,9 +161,7 @@ export const reports = pgTable("reports", {
   id: uuid("id").primaryKey().defaultRandom(),
   kind: text("kind").notNull(),
   title: text("title").notNull(),
-  generatedAt: timestamp("generated_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  generatedAt: timestamp("generated_at", { withTimezone: true }).notNull().defaultNow(),
   fileUrl: text("file_url"),
 });
 
@@ -185,7 +171,5 @@ export const auditLog = pgTable("audit_log", {
   action: text("action").notNull(),
   target: text("target"),
   payloadJson: jsonb("payload_json").$type<Record<string, unknown>>(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });

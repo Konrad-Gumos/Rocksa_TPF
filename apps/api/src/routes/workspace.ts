@@ -28,11 +28,7 @@ workspaceRouter.get("/overview", async (c) => {
     .select({ count: count() })
     .from(shipments)
     .where(eq(shipments.status, "pending"));
-  const recentOrders = await db
-    .select()
-    .from(orders)
-    .orderBy(desc(orders.createdAt))
-    .limit(5);
+  const recentOrders = await db.select().from(orders).orderBy(desc(orders.createdAt)).limit(5);
 
   return c.json({
     stats: {
@@ -78,13 +74,12 @@ workspaceRouter.post("/specimens", async (c) => {
   return c.json({ item: inserted[0] });
 });
 
-workspaceRouter.get("/reports/inventory", async (c) => {
+workspaceRouter.get("/reports/inventory", async (_c) => {
   const rows = await db.select().from(specimens);
   const lines = [
     "slug,name,category,price_cents,stock_status",
     ...rows.map(
-      (r) =>
-        `${r.slug},${JSON.stringify(r.name)},${r.category},${r.priceCents},${r.stockStatus}`,
+      (r) => `${r.slug},${JSON.stringify(r.name)},${r.category},${r.priceCents},${r.stockStatus}`,
     ),
   ];
   return new Response(lines.join("\n"), {

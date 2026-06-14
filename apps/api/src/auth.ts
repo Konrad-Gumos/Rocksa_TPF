@@ -31,11 +31,7 @@ export const upsertUser = async (
   name: string | null,
   role?: string,
 ): Promise<AuthUser> => {
-  const existing = await db
-    .select()
-    .from(users)
-    .where(eq(users.firebaseUid, firebaseUid))
-    .limit(1);
+  const existing = await db.select().from(users).where(eq(users.firebaseUid, firebaseUid)).limit(1);
   if (existing[0]) return toAuthUser(existing[0]);
 
   const inserted = await db
@@ -51,11 +47,7 @@ export const upsertUser = async (
 };
 
 export const loadUser = async (firebaseUid: string): Promise<AuthUser | null> => {
-  const row = await db
-    .select()
-    .from(users)
-    .where(eq(users.firebaseUid, firebaseUid))
-    .limit(1);
+  const row = await db.select().from(users).where(eq(users.firebaseUid, firebaseUid)).limit(1);
   return row[0] ? toAuthUser(row[0]) : null;
 };
 

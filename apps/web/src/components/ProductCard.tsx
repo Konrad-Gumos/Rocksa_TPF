@@ -1,10 +1,12 @@
 import { Link } from "@tanstack/react-router";
+import { motion, useReducedMotion } from "framer-motion";
 import { Badge } from "@rocksa/ui";
 import { formatPrice, isPurchasable, type Specimen } from "@rocksa/domain";
 import { PlusIcon, StarIcon } from "./Icons.tsx";
 import { useCart } from "@rocksa/cart";
 import { useWishlist } from "../state/wishlist.tsx";
 import { saveListingScroll } from "../lib/listing-scroll.ts";
+import { EASE } from "../lib/motion.ts";
 import type { ListingSearch } from "../lib/listing-search.ts";
 
 interface Props {
@@ -12,6 +14,8 @@ interface Props {
   rating?: number;
   variant?: "rail" | "grid";
   listingSearch?: ListingSearch;
+  modalSlugs?: string[];
+  modalReturnTo?: "/";
 }
 
 export const ProductCard = ({
@@ -19,19 +23,26 @@ export const ProductCard = ({
   rating,
   variant = "rail",
   listingSearch,
+  modalSlugs,
+  modalReturnTo,
 }: Props) => {
   const { add } = useCart();
   const { isSaved, toggle } = useWishlist();
   const purchasable = isPurchasable(specimen.stockStatus);
   const saved = isSaved(specimen.id);
+  const reduce = useReducedMotion();
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-md border border-ink-700/5 bg-white">
+    <motion.article
+      className="group relative flex flex-col overflow-hidden rounded-md border border-ink-700/5 bg-white"
+      whileHover={reduce ? undefined : { y: -5, transition: { duration: 0.22, ease: EASE } }}
+      whileTap={reduce ? undefined : { scale: 0.99 }}
+    >
       <Link
         to="/c/$category/p/$slug"
         params={{ category: specimen.category, slug: specimen.slug }}
         search={{ modal: true }}
-        state={{ listingSearch }}
+        state={{ listingSearch, modalSlugs, modalReturnTo }}
         onClick={() => saveListingScroll()}
         className="relative block aspect-square overflow-hidden bg-surface-soft"
       >
@@ -103,6 +114,6 @@ export const ProductCard = ({
           </button>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 };

@@ -23,17 +23,12 @@ const request = async <T>(
   }
 };
 
-export const loadServerCart = async (
-  token: string | null,
-): Promise<CartItem[]> => {
+export const loadServerCart = async (token: string | null): Promise<CartItem[]> => {
   const res = await request<{ items: CartItem[] }>("/v1/cart", token);
   return res?.items ?? [];
 };
 
-export const saveServerCart = async (
-  token: string | null,
-  items: CartItem[],
-): Promise<void> => {
+export const saveServerCart = async (token: string | null, items: CartItem[]): Promise<void> => {
   await request("/v1/cart", token, {
     method: "PUT",
     body: JSON.stringify({ items }),

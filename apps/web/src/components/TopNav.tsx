@@ -1,24 +1,20 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { Button, Input } from "@rocksa/ui";
 import { useAuth } from "@rocksa/auth";
 import { BellIcon, CartIcon, HelpIcon, SearchIcon } from "./Icons.tsx";
 import { useCartCount } from "@rocksa/cart";
 import { MobileNav } from "./MobileNav.tsx";
-
+import { defaultTransition } from "../lib/motion.ts";
+import { stickyTopNavClassName, topNavInnerClassName } from "../lib/layout.ts";
 interface Props {
   variant?: "full" | "minimal";
 }
 
-const NAV_LINKS = [
-  { label: "Collections", to: "/" as const },
-  { label: "Custom Design", to: "/custom-design" as const },
-  { label: "Investment", to: "/investment" as const },
-  { label: "Journal", to: "/journal" as const },
-] as const;
-
 export const TopNav = ({ variant = "full" }: Props) => {
   const count = useCartCount();
+  const reduce = useReducedMotion();
   const { status, signOut } = useAuth();
   const navigate = useNavigate();
   const routerSearch = useRouterState({
@@ -42,8 +38,8 @@ export const TopNav = ({ variant = "full" }: Props) => {
 
   if (variant === "minimal") {
     return (
-      <header className="border-b border-ink-700/5 bg-surface-muted">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+      <header className={stickyTopNavClassName}>
+        <div className={`${topNavInnerClassName} justify-between`}>
           <Link to="/" className="font-display text-2xl text-brand-600">
             Rocksa
           </Link>
@@ -58,37 +54,42 @@ export const TopNav = ({ variant = "full" }: Props) => {
   const authed = status === "authed";
 
   return (
-    <header className="border-b border-ink-700/5 bg-surface-muted">
-      <div className="mx-auto flex h-16 max-w-[1400px] items-center gap-6 px-6">
-        <Link to="/" className="font-display text-2xl text-brand-600">
+    <header className={stickyTopNavClassName}>
+      <div className={topNavInnerClassName}>
+        <Link to="/" className="shrink-0 font-display text-2xl text-brand-600">
           Rocksa
         </Link>
 
         <MobileNav />
 
-        <nav className="hidden items-center gap-8 font-display text-lg md:flex">
-          {NAV_LINKS.map((link) => (
-            <Link key={link.label} to={link.to} className="text-ink-900">
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
         <form
           onSubmit={submitSearch}
-          className="relative mx-auto hidden max-w-xl flex-1 lg:block"
+          className="relative hidden w-full max-w-xs md:block lg:max-w-sm"
         >
           <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" />
           <Input
             placeholder="Search collection…"
-            className="pl-10 bg-white/80 border-ink-700/5"
+            className="h-9 pl-10 bg-white/80 border-ink-700/5"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             aria-label="Search collection"
           />
         </form>
 
-        <nav className="flex items-center gap-2 text-brand-600">
+        <motion.div
+          className="flex-1"
+          aria-hidden
+          initial={reduce ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ ...defaultTransition, delay: 0.05 }}
+        />
+
+        <motion.nav
+          className="flex shrink-0 items-center gap-2 text-brand-600"
+          initial={reduce ? false : { opacity: 0, x: 10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ ...defaultTransition, delay: 0.08 }}
+        >
           <Link
             to="/cart"
             className="relative inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-brand-50"
@@ -115,24 +116,36 @@ export const TopNav = ({ variant = "full" }: Props) => {
               <Link to="/account">Account</Link>
             </Button>
           )}
-        </nav>
+        </motion.nav>
 
         {authed ? (
-          <Button
-            size="sm"
-            variant="secondary"
-            className="hidden md:inline-flex"
-            onClick={async () => {
-              await signOut();
-              navigate({ to: "/" });
-            }}
+          <motion.div
+            initial={reduce ? false : { opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ ...defaultTransition, delay: 0.1 }}
           >
-            Sign Out
-          </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              className="hidden shrink-0 md:inline-flex"
+              onClick={async () => {
+                await signOut();
+                navigate({ to: "/" });
+              }}
+            >
+              Sign Out
+            </Button>
+          </motion.div>
         ) : (
-          <Button asChild size="sm" className="hidden md:inline-flex">
-            <Link to="/auth/login">Sign In</Link>
-          </Button>
+          <motion.div
+            initial={reduce ? false : { opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ ...defaultTransition, delay: 0.1 }}
+          >
+            <Button asChild size="sm" className="hidden shrink-0 md:inline-flex">
+              <Link to="/auth/login">Sign In</Link>
+            </Button>
+          </motion.div>
         )}
       </div>
     </header>

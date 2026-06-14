@@ -14,13 +14,11 @@ import {
   TabsTrigger,
 } from "@rocksa/ui";
 import { TopNav } from "../../components/TopNav.tsx";
+import { checkoutMainClassName } from "../../lib/layout.ts";
 import { CheckoutStepper } from "../../components/checkout/CheckoutStepper.tsx";
 import { CheckoutTrustStrip } from "../../components/checkout/CheckoutTrustStrip.tsx";
 import { OrderSummary } from "../../components/checkout/OrderSummary.tsx";
-import {
-  paymentSchema,
-  type PaymentForm,
-} from "../../components/checkout/checkout-schemas.ts";
+import { paymentSchema, type PaymentForm } from "../../components/checkout/checkout-schemas.ts";
 import {
   isCheckoutInfoValid,
   readStoredCartItems,
@@ -67,9 +65,7 @@ function Payment() {
   const method = watch("method");
 
   useEffect(() => {
-    const sub = watch((data) =>
-      writeStoredPaymentInfo({ method: "card", ...data }),
-    );
+    const sub = watch((data) => writeStoredPaymentInfo({ method: "card", ...data }));
     return () => sub.unsubscribe();
   }, [watch]);
 
@@ -82,134 +78,132 @@ function Payment() {
   return (
     <div>
       <TopNav variant="minimal" />
-      <main className="mx-auto max-w-6xl gap-12 px-6 py-12 lg:grid lg:grid-cols-[1fr_360px]">
+      <main className={`${checkoutMainClassName} lg:grid lg:grid-cols-[1fr_360px]`}>
         <div className="space-y-6">
           <CheckoutTrustStrip />
-        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
-          <CheckoutStepper current="payment" />
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
+            <CheckoutStepper current="payment" />
 
-          <div>
-            <h1 className="font-display text-4xl">Secure Payment</h1>
-            <p className="mt-1 text-ink-500">
-              All transactions are encrypted and secured.
-            </p>
-          </div>
+            <div>
+              <h1 className="font-display text-4xl">Secure Payment</h1>
+              <p className="mt-1 text-ink-500">All transactions are encrypted and secured.</p>
+            </div>
 
-          {errors.root && (
-            <p className="text-sm text-red-600" role="alert">
-              {errors.root.message}
-            </p>
-          )}
-          {!errors.root && Object.keys(errors).length > 0 && (
-            <p className="text-sm text-red-600" role="alert">
-              {errors.method?.message ??
-                errors.cardholderName?.message ??
-                errors.cardNumber?.message ??
-                errors.expiration?.message ??
-                errors.cvc?.message ??
-                "Please complete your payment details."}
-            </p>
-          )}
-
-          <Tabs
-            value={method}
-            onValueChange={(value) =>
-              setValue("method", value as PaymentForm["method"], {
-                shouldValidate: true,
-              })
-            }
-          >
-            <TabsList>
-              <TabsTrigger value="card">Credit Card</TabsTrigger>
-              <TabsTrigger value="wire">Wire Transfer</TabsTrigger>
-              <TabsTrigger value="wallet">Digital Wallet</TabsTrigger>
-            </TabsList>
-
-            <input type="hidden" {...register("method")} />
-
-            <TabsContent value="card" className="pt-6">
-              <p className="mb-4 text-xs text-ink-500">
-                Card details are validated locally. Stripe Elements integration will replace
-                this form for live payment capture.
+            {errors.root && (
+              <p className="text-sm text-red-600" role="alert">
+                {errors.root.message}
               </p>
-              <Card>
-                <CardBody className="space-y-5">
-                  <div>
-                    <Label>Cardholder Name</Label>
-                    <Input
-                      variant="underline"
-                      placeholder="Name on card"
-                      autoComplete="cc-name"
-                      {...register("cardholderName")}
-                    />
-                  </div>
-                  <div>
-                    <Label>Card Number</Label>
-                    <Input
-                      variant="underline"
-                      placeholder="0000 0000 0000 0000"
-                      inputMode="numeric"
-                      autoComplete="cc-number"
-                      {...register("cardNumber")}
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-6">
+            )}
+            {!errors.root && Object.keys(errors).length > 0 && (
+              <p className="text-sm text-red-600" role="alert">
+                {errors.method?.message ??
+                  errors.cardholderName?.message ??
+                  errors.cardNumber?.message ??
+                  errors.expiration?.message ??
+                  errors.cvc?.message ??
+                  "Please complete your payment details."}
+              </p>
+            )}
+
+            <Tabs
+              value={method}
+              onValueChange={(value) =>
+                setValue("method", value as PaymentForm["method"], {
+                  shouldValidate: true,
+                })
+              }
+            >
+              <TabsList>
+                <TabsTrigger value="card">Credit Card</TabsTrigger>
+                <TabsTrigger value="wire">Wire Transfer</TabsTrigger>
+                <TabsTrigger value="wallet">Digital Wallet</TabsTrigger>
+              </TabsList>
+
+              <input type="hidden" {...register("method")} />
+
+              <TabsContent value="card" className="pt-6">
+                <p className="mb-4 text-xs text-ink-500">
+                  Card details are validated locally. Stripe Elements integration will replace this
+                  form for live payment capture.
+                </p>
+                <Card>
+                  <CardBody className="space-y-5">
                     <div>
-                      <Label>Expiration Date</Label>
+                      <Label>Cardholder Name</Label>
                       <Input
                         variant="underline"
-                        placeholder="MM/YY"
-                        autoComplete="cc-exp"
-                        {...register("expiration")}
+                        placeholder="Name on card"
+                        autoComplete="cc-name"
+                        {...register("cardholderName")}
                       />
                     </div>
                     <div>
-                      <Label>CVC</Label>
+                      <Label>Card Number</Label>
                       <Input
                         variant="underline"
-                        placeholder="123"
-                        autoComplete="cc-csc"
-                        {...register("cvc")}
+                        placeholder="0000 0000 0000 0000"
+                        inputMode="numeric"
+                        autoComplete="cc-number"
+                        {...register("cardNumber")}
                       />
                     </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </TabsContent>
+                    <div className="grid grid-cols-2 gap-6">
+                      <div>
+                        <Label>Expiration Date</Label>
+                        <Input
+                          variant="underline"
+                          placeholder="MM/YY"
+                          autoComplete="cc-exp"
+                          {...register("expiration")}
+                        />
+                      </div>
+                      <div>
+                        <Label>CVC</Label>
+                        <Input
+                          variant="underline"
+                          placeholder="123"
+                          autoComplete="cc-csc"
+                          {...register("cvc")}
+                        />
+                      </div>
+                    </div>
+                  </CardBody>
+                </Card>
+              </TabsContent>
 
-            <TabsContent value="wire" className="pt-6">
-              <Card>
-                <CardBody>
-                  <p className="text-sm text-ink-700">
-                    A senior curator will contact you with wire instructions
-                    within 1 business day. Your order will be held in{" "}
-                    <strong>pending_payment</strong> until funds clear.
-                  </p>
-                </CardBody>
-              </Card>
-            </TabsContent>
+              <TabsContent value="wire" className="pt-6">
+                <Card>
+                  <CardBody>
+                    <p className="text-sm text-ink-700">
+                      A senior curator will contact you with wire instructions within 1 business
+                      day. Your order will be held in <strong>pending_payment</strong> until funds
+                      clear.
+                    </p>
+                  </CardBody>
+                </Card>
+              </TabsContent>
 
-            <TabsContent value="wallet" className="pt-6">
-              <Card>
-                <CardBody>
-                  <p className="text-sm text-ink-700">
-                    Apple Pay and Google Pay support coming soon. Selecting this
-                    option records your intent only.
-                  </p>
-                </CardBody>
-              </Card>
-            </TabsContent>
-          </Tabs>
+              <TabsContent value="wallet" className="pt-6">
+                <Card>
+                  <CardBody>
+                    <p className="text-sm text-ink-700">
+                      Apple Pay and Google Pay support coming soon. Selecting this option records
+                      your intent only.
+                    </p>
+                  </CardBody>
+                </Card>
+              </TabsContent>
+            </Tabs>
 
-          <div className="flex items-center justify-between">
-            <Link to="/checkout" className="text-sm text-brand-600">
-              ← Return to information
-            </Link>
-            <Button size="lg" type="submit">
-              Continue to review
-            </Button>
-          </div>
-        </form>
+            <div className="flex items-center justify-between">
+              <Link to="/checkout" className="text-sm text-brand-600">
+                ← Return to information
+              </Link>
+              <Button size="lg" type="submit">
+                Continue to review
+              </Button>
+            </div>
+          </form>
         </div>
 
         <aside>

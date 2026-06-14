@@ -3,12 +3,10 @@ import { useState } from "react";
 import { Button } from "@rocksa/ui";
 import { CloseIcon } from "./Icons.tsx";
 
+import { STOREFRONT_LINKS } from "./CategorySidebar.tsx";
+
 const LINKS = [
-  { label: "Collections", to: "/" as const },
-  { label: "Crystals", to: "/c/$category" as const, params: { category: "crystals" } },
-  { label: "Journal", to: "/journal" as const },
-  { label: "Investment", to: "/investment" as const },
-  { label: "Custom Design", to: "/custom-design" as const },
+  ...STOREFRONT_LINKS.map((l) => ({ label: l.label, to: l.to })),
   { label: "Cart", to: "/cart" as const },
 ] as const;
 
@@ -44,7 +42,6 @@ export const MobileNav = () => {
                 <li key={link.label}>
                   <Link
                     to={link.to}
-                    {...("params" in link ? { params: link.params } : {})}
                     className="block rounded-md px-3 py-2 text-sm text-ink-900 hover:bg-brand-50"
                     onClick={() => setOpen(false)}
                   >

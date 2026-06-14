@@ -58,10 +58,7 @@ cartRouter.put("/", async (c) => {
       qty: i.qty,
     }));
   if (rows.length > 0) await db.insert(cartItems).values(rows);
-  await db
-    .update(carts)
-    .set({ updatedAt: new Date() })
-    .where(eq(carts.id, cart.id));
+  await db.update(carts).set({ updatedAt: new Date() }).where(eq(carts.id, cart.id));
   return c.json({ ok: true });
 });
 
@@ -77,11 +74,6 @@ cartRouter.delete("/items/:slug", async (c) => {
   if (!specimen[0]) return c.json({ error: "not found" }, 404);
   await db
     .delete(cartItems)
-    .where(
-      and(
-        eq(cartItems.cartId, cart.id),
-        eq(cartItems.specimenId, specimen[0].id),
-      ),
-    );
+    .where(and(eq(cartItems.cartId, cart.id), eq(cartItems.specimenId, specimen[0].id)));
   return c.json({ ok: true });
 });

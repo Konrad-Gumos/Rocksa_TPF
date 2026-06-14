@@ -83,12 +83,8 @@
           "name": "addresses_user_id_users_id_fk",
           "tableFrom": "addresses",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -148,12 +144,8 @@
           "name": "audit_log_actor_id_users_id_fk",
           "tableFrom": "audit_log",
           "tableTo": "users",
-          "columnsFrom": [
-            "actor_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["actor_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -193,12 +185,8 @@
           "name": "cart_items_cart_id_carts_id_fk",
           "tableFrom": "cart_items",
           "tableTo": "carts",
-          "columnsFrom": [
-            "cart_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["cart_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -206,12 +194,8 @@
           "name": "cart_items_specimen_id_specimens_id_fk",
           "tableFrom": "cart_items",
           "tableTo": "specimens",
-          "columnsFrom": [
-            "specimen_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["specimen_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -219,10 +203,7 @@
       "compositePrimaryKeys": {
         "cart_items_cart_id_specimen_id_pk": {
           "name": "cart_items_cart_id_specimen_id_pk",
-          "columns": [
-            "cart_id",
-            "specimen_id"
-          ]
+          "columns": ["cart_id", "specimen_id"]
         }
       },
       "uniqueConstraints": {},
@@ -268,12 +249,8 @@
           "name": "carts_user_id_users_id_fk",
           "tableFrom": "carts",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -314,12 +291,8 @@
           "name": "collection_items_collection_id_collections_id_fk",
           "tableFrom": "collection_items",
           "tableTo": "collections",
-          "columnsFrom": [
-            "collection_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["collection_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -327,12 +300,8 @@
           "name": "collection_items_specimen_id_specimens_id_fk",
           "tableFrom": "collection_items",
           "tableTo": "specimens",
-          "columnsFrom": [
-            "specimen_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["specimen_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -340,10 +309,7 @@
       "compositePrimaryKeys": {
         "collection_items_collection_id_specimen_id_pk": {
           "name": "collection_items_collection_id_specimen_id_pk",
-          "columns": [
-            "collection_id",
-            "specimen_id"
-          ]
+          "columns": ["collection_id", "specimen_id"]
         }
       },
       "uniqueConstraints": {},
@@ -382,9 +348,7 @@
         "collections_slug_unique": {
           "name": "collections_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -432,12 +396,8 @@
           "name": "order_items_order_id_orders_id_fk",
           "tableFrom": "order_items",
           "tableTo": "orders",
-          "columnsFrom": [
-            "order_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["order_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -445,12 +405,8 @@
           "name": "order_items_specimen_id_specimens_id_fk",
           "tableFrom": "order_items",
           "tableTo": "specimens",
-          "columnsFrom": [
-            "specimen_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["specimen_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -458,10 +414,7 @@
       "compositePrimaryKeys": {
         "order_items_order_id_specimen_id_pk": {
           "name": "order_items_order_id_specimen_id_pk",
-          "columns": [
-            "order_id",
-            "specimen_id"
-          ]
+          "columns": ["order_id", "specimen_id"]
         }
       },
       "uniqueConstraints": {},
@@ -532,12 +485,8 @@
           "name": "orders_user_id_users_id_fk",
           "tableFrom": "orders",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -636,12 +585,8 @@
           "name": "shipments_order_id_orders_id_fk",
           "tableFrom": "shipments",
           "tableTo": "orders",
-          "columnsFrom": [
-            "order_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["order_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -681,12 +626,8 @@
           "name": "specimen_attrs_specimen_id_specimens_id_fk",
           "tableFrom": "specimen_attrs",
           "tableTo": "specimens",
-          "columnsFrom": [
-            "specimen_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["specimen_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -694,10 +635,7 @@
       "compositePrimaryKeys": {
         "specimen_attrs_specimen_id_key_pk": {
           "name": "specimen_attrs_specimen_id_key_pk",
-          "columns": [
-            "specimen_id",
-            "key"
-          ]
+          "columns": ["specimen_id", "key"]
         }
       },
       "uniqueConstraints": {},
@@ -809,9 +747,7 @@
         "specimens_slug_unique": {
           "name": "specimens_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -869,9 +805,7 @@
         "users_firebase_uid_unique": {
           "name": "users_firebase_uid_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "firebase_uid"
-          ]
+          "columns": ["firebase_uid"]
         }
       },
       "policies": {},

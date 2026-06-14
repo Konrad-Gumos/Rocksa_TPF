@@ -12,7 +12,7 @@ function Acquisitions() {
   });
 
   return (
-    <div className="p-10">
+    <div>
       <h1 className="font-display text-5xl">Acquisitions Tracking</h1>
       <p className="text-ink-500 mt-1">Monitor active inbound logistics from the database.</p>
 
@@ -40,9 +40,7 @@ function Acquisitions() {
                     <td>
                       <Badge tone="neutral">{s.status.replace(/_/g, " ")}</Badge>
                     </td>
-                    <td className="px-6">
-                      {s.eta ? new Date(s.eta).toLocaleDateString() : "—"}
-                    </td>
+                    <td className="px-6">{s.eta ? new Date(s.eta).toLocaleDateString() : "—"}</td>
                   </tr>
                 ))}
               </tbody>

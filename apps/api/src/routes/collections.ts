@@ -1,21 +1,13 @@
 import { Hono } from "hono";
 import { asc, eq, inArray } from "drizzle-orm";
 import { db } from "@rocksa/db";
-import {
-  collectionItems,
-  collections,
-  specimenAttrs,
-  specimens,
-} from "@rocksa/db/schema";
+import { collectionItems, collections, specimenAttrs, specimens } from "@rocksa/db/schema";
 
 export const collectionsRouter = new Hono();
 
 const attrsBySpecimenId = async (ids: string[]) => {
   if (ids.length === 0) return new Map<string, Record<string, string>>();
-  const rows = await db
-    .select()
-    .from(specimenAttrs)
-    .where(inArray(specimenAttrs.specimenId, ids));
+  const rows = await db.select().from(specimenAttrs).where(inArray(specimenAttrs.specimenId, ids));
   const map = new Map<string, Record<string, string>>();
   for (const row of rows) {
     const attrs = map.get(row.specimenId) ?? {};
@@ -27,11 +19,7 @@ const attrsBySpecimenId = async (ids: string[]) => {
 
 collectionsRouter.get("/:slug", async (c) => {
   const slug = c.req.param("slug");
-  const row = await db
-    .select()
-    .from(collections)
-    .where(eq(collections.slug, slug))
-    .limit(1);
+  const row = await db.select().from(collections).where(eq(collections.slug, slug)).limit(1);
   if (!row[0]) return c.json({ error: "not found" }, 404);
 
   const links = await db
@@ -43,10 +31,7 @@ collectionsRouter.get("/:slug", async (c) => {
   const specimenIds = links.map((l) => l.specimenId);
   if (specimenIds.length === 0) return c.json({ items: [] });
 
-  const rows = await db
-    .select()
-    .from(specimens)
-    .where(inArray(specimens.id, specimenIds));
+  const rows = await db.select().from(specimens).where(inArray(specimens.id, specimenIds));
   const attrs = await attrsBySpecimenId(specimenIds);
   const byId = new Map(
     rows.map((specimen) => [

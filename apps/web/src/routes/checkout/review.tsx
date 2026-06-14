@@ -2,12 +2,10 @@ import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-ro
 import { Button } from "@rocksa/ui";
 import { formatPrice } from "@rocksa/domain";
 import { TopNav } from "../../components/TopNav.tsx";
+import { checkoutMainClassName } from "../../lib/layout.ts";
 import { CheckoutStepper } from "../../components/checkout/CheckoutStepper.tsx";
 import { CheckoutTrustStrip } from "../../components/checkout/CheckoutTrustStrip.tsx";
-import {
-  OrderSummary,
-  useCheckoutTotals,
-} from "../../components/checkout/OrderSummary.tsx";
+import { OrderSummary, useCheckoutTotals } from "../../components/checkout/OrderSummary.tsx";
 import {
   isCheckoutInfoValid,
   isPaymentInfoValid,
@@ -51,10 +49,7 @@ function Review() {
   const { items, clear } = useCart();
   const { info, payment, createOrder } = useOrder();
   const navigate = useNavigate();
-  const { subtotalCents, shippingCents, totalCents } = useCheckoutTotals(
-    items,
-    info,
-  );
+  const { subtotalCents, shippingCents, totalCents } = useCheckoutTotals(items, info);
 
   const completePurchase = async () => {
     const order = await createOrder({
@@ -75,7 +70,7 @@ function Review() {
   return (
     <div>
       <TopNav variant="minimal" />
-      <main className="mx-auto grid max-w-6xl gap-12 px-6 py-12 lg:grid-cols-[1fr_360px]">
+      <main className={`${checkoutMainClassName} grid lg:grid-cols-[1fr_360px]`}>
         <div className="space-y-8">
           <CheckoutStepper current="review" />
           <CheckoutTrustStrip />
@@ -164,8 +159,7 @@ function Review() {
                   <LockIcon className="h-4 w-4" /> Complete Purchase
                 </Button>
                 <p className="flex items-center justify-center gap-1 text-xs text-ink-500">
-                  <ShieldIcon className="h-3 w-3" /> Backed by Rocksa Authenticity
-                  Guarantee
+                  <ShieldIcon className="h-3 w-3" /> Backed by Rocksa Authenticity Guarantee
                 </p>
               </>
             }

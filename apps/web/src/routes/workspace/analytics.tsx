@@ -32,7 +32,7 @@ function Analytics() {
   ).join(" ");
 
   return (
-    <div className="p-10">
+    <div>
       <div className="flex items-start justify-between">
         <div>
           <h1 className="font-display text-5xl">Performance Analytics</h1>

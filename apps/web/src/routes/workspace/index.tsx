@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button, Card, CardBody } from "@rocksa/ui";
+import { layoutPaddingX } from "../../lib/layout.ts";
 
 export const Route = createFileRoute("/workspace/")({ component: WorkspaceWelcome });
 
@@ -7,7 +8,7 @@ function WorkspaceWelcome() {
   return (
     <main className="min-h-screen grid md:grid-cols-2">
       <div className="hidden md:block bg-gradient-to-br from-brand-200 to-brand-100" />
-      <div className="flex flex-col justify-center p-10 max-w-xl">
+      <div className={`flex max-w-xl flex-col justify-center ${layoutPaddingX} py-10`}>
         <p className="font-display text-brand-600 text-xl">Rocksa</p>
         <h1 className="font-display text-4xl mt-6">Welcome to your Workspace</h1>
         <p className="text-ink-500 mt-3">

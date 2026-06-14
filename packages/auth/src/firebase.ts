@@ -1,9 +1,5 @@
 import { initializeApp, getApps, type FirebaseApp } from "firebase/app";
-import {
-  connectAuthEmulator,
-  getAuth,
-  type Auth,
-} from "firebase/auth";
+import { connectAuthEmulator, getAuth, type Auth } from "firebase/auth";
 import { readEnv } from "./env.ts";
 
 export const firebaseConfig = {
@@ -13,8 +9,7 @@ export const firebaseConfig = {
   appId: readEnv("VITE_FIREBASE_APP_ID") ?? "demo-app-id",
 } as const;
 
-export const firebaseApp: FirebaseApp =
-  getApps()[0] ?? initializeApp(firebaseConfig);
+export const firebaseApp: FirebaseApp = getApps()[0] ?? initializeApp(firebaseConfig);
 
 export const firebaseAuth: Auth = getAuth(firebaseApp);
 

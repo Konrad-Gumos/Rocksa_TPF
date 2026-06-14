@@ -18,9 +18,24 @@ const specimen = (overrides: Partial<Specimen> & Pick<Specimen, "slug">): Specim
 });
 
 const FIXTURES: Specimen[] = [
-  specimen({ slug: "a", subcategory: "Quartz", priceCents: 3000, attributes: { Color: "Blue", Clarity: "VVS" } }),
-  specimen({ slug: "b", subcategory: "Beryl", priceCents: 8000, attributes: { Color: "Green", Clarity: "VS" } }),
-  specimen({ slug: "c", subcategory: "Quartz", priceCents: 5000, attributes: { Color: "Blue", Clarity: "VS" } }),
+  specimen({
+    slug: "a",
+    subcategory: "Quartz",
+    priceCents: 3000,
+    attributes: { Color: "Blue", Clarity: "VVS" },
+  }),
+  specimen({
+    slug: "b",
+    subcategory: "Beryl",
+    priceCents: 8000,
+    attributes: { Color: "Green", Clarity: "VS" },
+  }),
+  specimen({
+    slug: "c",
+    subcategory: "Quartz",
+    priceCents: 5000,
+    attributes: { Color: "Blue", Clarity: "VS" },
+  }),
 ];
 
 describe("catalog filters", () => {
@@ -38,14 +53,10 @@ describe("catalog filters", () => {
 
   it("sorts by price ascending and descending", () => {
     expect(
-      applyListing(FIXTURES, { category: "crystals" }, "price-asc").map(
-        (s) => s.slug,
-      ),
+      applyListing(FIXTURES, { category: "crystals" }, "price-asc").map((s) => s.slug),
     ).toEqual(["a", "c", "b"]);
     expect(
-      applyListing(FIXTURES, { category: "crystals" }, "price-desc").map(
-        (s) => s.slug,
-      ),
+      applyListing(FIXTURES, { category: "crystals" }, "price-desc").map((s) => s.slug),
     ).toEqual(["b", "c", "a"]);
   });
 

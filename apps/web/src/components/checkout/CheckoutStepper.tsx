@@ -55,11 +55,7 @@ export const CheckoutStepper = ({ current }: Props) => {
         return (
           <span key={step.key} className="flex items-center gap-2">
             {index > 0 && <span aria-hidden>›</span>}
-            {visitable && step.key !== current ? (
-              <Link to={step.to}>{content}</Link>
-            ) : (
-              content
-            )}
+            {visitable && step.key !== current ? <Link to={step.to}>{content}</Link> : content}
           </span>
         );
       })}

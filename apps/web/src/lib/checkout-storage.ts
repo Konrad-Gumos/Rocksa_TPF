@@ -67,6 +67,5 @@ export const isCheckoutInfoValid = (info: CheckoutInfo): boolean =>
 export const isPaymentInfoValid = (payment: PaymentInfo): boolean =>
   validatePaymentIntent(payment as Partial<PaymentIntent>).ok;
 
-export const shippingCentsForDelivery = (
-  delivery: CheckoutInfo["delivery"],
-): number => (delivery === "express" ? EXPRESS_SHIPPING_CENTS : 0);
+export const shippingCentsForDelivery = (delivery: CheckoutInfo["delivery"]): number =>
+  delivery === "express" ? EXPRESS_SHIPPING_CENTS : 0;

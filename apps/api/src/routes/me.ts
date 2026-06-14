@@ -3,12 +3,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@rocksa/db";
 import { users } from "@rocksa/db/schema";
-import {
-  bearerToken,
-  requireAuth,
-  upsertUser,
-  type AuthUser,
-} from "../auth.ts";
+import { bearerToken, requireAuth, upsertUser, type AuthUser } from "../auth.ts";
 import { verifyIdToken } from "../firebase.ts";
 
 export const meRouter = new Hono<{ Variables: { user: AuthUser } }>();

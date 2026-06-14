@@ -40,7 +40,7 @@ function Overview() {
   const recent = data?.recentOrders ?? [];
 
   return (
-    <div className="p-10">
+    <div>
       <h1 className="font-display text-5xl">Overview</h1>
       <p className="text-ink-500 mt-1">
         At-a-glance summary of your curated collection and recent logistical activities.

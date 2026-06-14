@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, Input, Label, Separator } from "@rocksa/ui";
 import { formatPrice, subtotal, total, type CartItem } from "@rocksa/domain";
-import { useSpecimenLookup } from "../../data/api-specimens.ts";
+import { useSpecimenLookup } from "../../data/specimens-query.ts";
 import { shippingCentsForDelivery } from "../../lib/checkout-storage.ts";
 import type { CheckoutInfo } from "../../state/order.tsx";
 import type { ReactNode } from "react";
@@ -29,11 +29,7 @@ export const OrderSummary = ({ items, info, action }: Props) => {
             return (
               <div key={item.specimenId} className="flex gap-3">
                 <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-surface-soft">
-                  <img
-                    src={specimen.imageUrl}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
+                  <img src={specimen.imageUrl} alt="" className="h-full w-full object-cover" />
                   <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-ink-900 text-[10px] text-white">
                     {item.qty}
                   </span>
@@ -44,9 +40,7 @@ export const OrderSummary = ({ items, info, action }: Props) => {
                     {Object.values(specimen.attributes).slice(0, 2).join(", ")}
                   </p>
                 </div>
-                <p className="shrink-0 text-sm">
-                  {formatPrice(item.unitPriceCents * item.qty)}
-                </p>
+                <p className="shrink-0 text-sm">{formatPrice(item.unitPriceCents * item.qty)}</p>
               </div>
             );
           })}
@@ -77,9 +71,7 @@ export const OrderSummary = ({ items, info, action }: Props) => {
         <div className="flex items-baseline justify-between">
           <Label>Total</Label>
           <p className="font-display text-3xl">
-            <span className="mr-2 text-xs uppercase tracking-wider text-ink-500">
-              USD
-            </span>
+            <span className="mr-2 text-xs uppercase tracking-wider text-ink-500">USD</span>
             {formatPrice(totalCents)}
           </p>
         </div>

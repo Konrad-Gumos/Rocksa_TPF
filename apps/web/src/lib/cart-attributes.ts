@@ -1,8 +1,6 @@
 import type { Specimen } from "@rocksa/domain";
 
-export const cartAttributeRows = (
-  specimen: Specimen,
-): [label: string, value: string][] => {
+export const cartAttributeRows = (specimen: Specimen): [label: string, value: string][] => {
   const rows: [string, string | null | undefined][] = [
     ["Carat", specimen.attributes["Carat"] ?? specimen.attributes["Weight"]],
     ["Cut", specimen.attributes["Cut"]],

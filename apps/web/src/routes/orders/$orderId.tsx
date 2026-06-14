@@ -4,7 +4,7 @@ import { Button, Card, CardBody } from "@rocksa/ui";
 import { formatPrice } from "@rocksa/domain";
 import { useAuth } from "@rocksa/auth";
 import { useOrder } from "../../state/order.tsx";
-import { useSpecimenLookup } from "../../data/api-specimens.ts";
+import { useSpecimenLookup } from "../../data/specimens-query.ts";
 import { fetchOrder, type ServerOrderItem } from "../../data/api-orders.ts";
 import { DiamondIcon } from "../../components/Icons.tsx";
 import { OrderStatusTimeline } from "../../components/OrderStatusTimeline.tsx";
@@ -48,8 +48,7 @@ function OrderPage() {
     staleTime: 60_000,
   });
 
-  const sessionOrder =
-    lastOrder && lastOrder.id === orderId ? lastOrder : null;
+  const sessionOrder = lastOrder && lastOrder.id === orderId ? lastOrder : null;
   const order = fetched ?? sessionOrder;
 
   if (isLoading && status === "authed" && !sessionOrder) {
@@ -97,10 +96,8 @@ function OrderPage() {
 
   const reference = order.reference;
   const orderStatus =
-    fetched?.status ??
-    ("status" in order && order.status ? order.status : "pending_payment");
-  const paymentMethod =
-    "paymentMethod" in order ? order.paymentMethod : undefined;
+    fetched?.status ?? ("status" in order && order.status ? order.status : "pending_payment");
+  const paymentMethod = "paymentMethod" in order ? order.paymentMethod : undefined;
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-surface-muted px-6 py-16">

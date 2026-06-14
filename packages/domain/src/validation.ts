@@ -27,10 +27,7 @@ export const validatePassword = (input: string): Result<string> =>
     ? { ok: true, value: normalizeInput(input) }
     : { ok: false, error: "Password must be at least 8 characters." };
 
-export const validatePostal = (
-  country: string,
-  input: string,
-): Result<string> => {
+export const validatePostal = (country: string, input: string): Result<string> => {
   const normalized = normalizeInput(input).toUpperCase();
   const pattern = POSTAL_RE[country.toUpperCase() as keyof typeof POSTAL_RE];
 
@@ -43,10 +40,7 @@ export const validatePostal = (
     : { ok: false, error: "Enter a valid postal code for this country." };
 };
 
-export const validateRequired = (
-  label: string,
-  input: string,
-): Result<string> =>
+export const validateRequired = (label: string, input: string): Result<string> =>
   input.trim().length > 0
     ? { ok: true, value: input.trim() }
     : { ok: false, error: `${label} is required.` };
@@ -64,9 +58,7 @@ export interface AddressInput {
   delivery: "standard" | "express";
 }
 
-export const validateAddress = (
-  input: Partial<AddressInput>,
-): Result<AddressInput> => {
+export const validateAddress = (input: Partial<AddressInput>): Result<AddressInput> => {
   const email = validateEmail(input.email ?? "");
   if (!email.ok) return email;
 
@@ -136,10 +128,7 @@ const luhnCheck = (digits: string): boolean => {
 };
 
 export const validateCard = (input: Partial<CardInput>): Result<CardInput> => {
-  const cardholderName = validateRequired(
-    "Cardholder name",
-    input.cardholderName ?? "",
-  );
+  const cardholderName = validateRequired("Cardholder name", input.cardholderName ?? "");
   if (!cardholderName.ok) return cardholderName;
 
   const digits = (input.cardNumber ?? "").replace(/\s+/g, "");
@@ -178,9 +167,7 @@ export interface PaymentIntent {
   cvc?: string;
 }
 
-export const validatePaymentIntent = (
-  input: Partial<PaymentIntent>,
-): Result<PaymentIntent> => {
+export const validatePaymentIntent = (input: Partial<PaymentIntent>): Result<PaymentIntent> => {
   const method = input.method;
   if (method !== "card" && method !== "wire" && method !== "wallet") {
     return { ok: false, error: "Select a payment method." };
