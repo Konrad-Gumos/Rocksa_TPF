@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { Button, Input } from "@rocksa/ui";
 import { TopNav } from "../../components/TopNav.tsx";
 import { CheckoutStepper } from "../../components/checkout/CheckoutStepper.tsx";
+import { CheckoutTrustStrip } from "../../components/checkout/CheckoutTrustStrip.tsx";
 import { OrderSummary } from "../../components/checkout/OrderSummary.tsx";
 import {
   checkoutInfoSchema,
@@ -67,7 +68,9 @@ function Checkout() {
   return (
     <div>
       <TopNav variant="minimal" />
-      <main className="mx-auto grid max-w-6xl gap-12 px-6 py-12 lg:grid-cols-[1fr_360px]">
+      <main className="mx-auto max-w-6xl gap-12 px-6 py-12 lg:grid lg:grid-cols-[1fr_360px]">
+        <div className="space-y-8">
+          <CheckoutTrustStrip />
         <form className="space-y-10" onSubmit={handleSubmit(onSubmit)} noValidate>
           <CheckoutStepper current="information" />
 
@@ -218,6 +221,7 @@ function Checkout() {
             </Button>
           </div>
         </form>
+        </div>
 
         <aside>
           <OrderSummary items={items} info={{ ...info, delivery }} />

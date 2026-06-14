@@ -3,6 +3,7 @@ import { Button } from "@rocksa/ui";
 import { formatPrice } from "@rocksa/domain";
 import { TopNav } from "../../components/TopNav.tsx";
 import { CheckoutStepper } from "../../components/checkout/CheckoutStepper.tsx";
+import { CheckoutTrustStrip } from "../../components/checkout/CheckoutTrustStrip.tsx";
 import {
   OrderSummary,
   useCheckoutTotals,
@@ -72,6 +73,7 @@ function Review() {
       <main className="mx-auto grid max-w-6xl gap-12 px-6 py-12 lg:grid-cols-[1fr_360px]">
         <div className="space-y-8">
           <CheckoutStepper current="review" />
+          <CheckoutTrustStrip />
 
           <div>
             <h1 className="font-display text-4xl">Review your order</h1>
