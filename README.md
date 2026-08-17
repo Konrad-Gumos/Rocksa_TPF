@@ -1,59 +1,94 @@
 # Rocksa
 
-A luxury gemstone & mineral marketplace, built on Firebase Auth + **Firebase Data Connect** (Cloud SQL Postgres) with a typed, generated SDK.
+A luxury gemstone & mineral marketplace: React storefront, Hono API, Postgres, Firebase Auth.
 
 ## Stack
 
-Bun · React 19 · TanStack Router · Tailwind v4 · Firebase Auth · Firebase Data Connect (Cloud SQL Postgres) · Vitest · Oxlint/oxfmt.
+Bun · React 19 · TanStack Router · TanStack Query · Tailwind v4 · framer-motion · Firebase Auth · Hono · PostgreSQL 16 + Drizzle · Vitest · Oxlint/oxfmt.
 
-See [`docs/plan/00-overview.md`](./docs/plan/00-overview.md) for the full plan, or [`docs/plan/15-backend.md`](./docs/plan/15-backend.md) for the Data Connect wiring.
+See [`docs/plan/00-overview.md`](./docs/plan/00-overview.md) for the phased build plan.
+
+## Screenshots
+
+**Storefront home**
+
+![Storefront home](docs/screenshots/home.png)
+
+**Category listing with filters**
+
+![Category listing](docs/screenshots/katalog.png)
+
+**Specimen modal over the listing**
+
+![Specimen modal](docs/screenshots/produkt.png)
+
+**Search**
+
+![Search](docs/screenshots/wyszukiwarka.png)
+
+**Cart**
+
+![Cart](docs/screenshots/koszyk.png)
+
+**Checkout, step 1 of 3**
+
+![Checkout](docs/screenshots/checkout.png)
+
+**Order confirmation**
+
+![Order confirmation](docs/screenshots/zamowienie.png)
+
+**Custom design inquiry**
+
+![Custom design inquiry](docs/screenshots/custom-design.png)
 
 ## Quick start
 
 ```bash
 bun install
-cp .env.example .env       # fill VITE_FIREBASE_* and FIREBASE_PROJECT_ID
-bun dev                    # http://localhost:5173 — runs against stub SDK
+docker compose up -d          # Postgres 16 on :5432
+bun run db:migrate            # apply schema
+bun run db:seed               # 30 specimens
+bun run api                   # API on http://localhost:8787
+bun dev                       # web on http://localhost:5173
 ```
 
-The web app ships with a **stub** generated SDK at `apps/web/src/dataconnect-generated/` so the UI works against the local seed array without any backend.
+`.env.development` is committed and holds the non-secret dev config (Firebase web keys, `DATABASE_URL`, `VITE_API_URL`). Anything secret, such as a service-account JSON, goes in a local git-ignored `.env`; see [`.env.example`](./.env.example).
 
-## Deploy Data Connect (provisions Cloud SQL + replaces the stub)
-
-```bash
-npm i -g firebase-tools
-firebase login
-firebase use --add
-firebase init dataconnect              # recognises existing dataconnect/
-firebase deploy --only dataconnect     # creates Cloud SQL, applies schema, regenerates SDK
-
-# Seed the catalog
-FIREBASE_PROJECT_ID=<id> GOOGLE_APPLICATION_CREDENTIALS=/path/to/admin.json bun run seed
-```
-
-Or work fully offline with the emulator — see [docs/plan/15-backend.md](./docs/plan/15-backend.md#first-run-setup-local-emulators-no-cloud-sql).
+Auth runs against the real Firebase project by default. To use the local emulator instead, set `VITE_FIREBASE_AUTH_EMULATOR` and run `bun run emulators:auth`.
 
 ## Scripts
 
-| Command             | What it does                    |
-| ------------------- | ------------------------------- |
-| `bun dev`           | Run the web app                 |
-| `bun run build`     | Build every workspace package   |
-| `bun run typecheck` | Type-check every package        |
-| `bun test`          | Run Vitest                      |
-| `bun run lint`      | Oxlint                          |
-| `bun run fmt`       | oxfmt                           |
-| `bun run seed`      | Seed specimens via Data Connect |
+| Command               | What it does                          |
+| --------------------- | ------------------------------------- |
+| `bun dev`             | Run the web app (Vite)                |
+| `bun run api`         | Run the API server (watch mode)       |
+| `bun run db:generate` | Generate Drizzle migrations           |
+| `bun run db:migrate`  | Apply migrations                      |
+| `bun run db:seed`     | Seed the catalog                      |
+| `bun run build`       | Build every workspace package         |
+| `bun run typecheck`   | Type-check every package              |
+| `bun test`            | Run Vitest                            |
+| `bun run test:auth`   | Firebase Auth end-to-end test         |
+| `bun run lint`        | Oxlint                                |
+| `bun run fmt`         | oxfmt                                 |
 
 ## Layout
 
 ```
-apps/web                    # React SPA — uses generated Data Connect SDK
-packages/ui                 # Shadcn-derived primitives, Rocksa tokens
-packages/auth               # Firebase Auth init + AuthProvider
-packages/domain             # Pure types and functional helpers
-dataconnect/                # Postgres schema (GraphQL SDL) + connector ops
-scripts/seed-dataconnect.ts # Catalog seed via UpsertSpecimen mutations
-firebase.json               # Emulator + deploy config
-docs/plan                   # Phased build plan
+apps/web            # React SPA (TanStack Router, file-based routes)
+apps/api            # Hono REST API on Bun, /v1/*
+packages/ui         # Shadcn-derived primitives, Rocksa tokens
+packages/auth       # Firebase Auth init, AuthProvider, route guards
+packages/cart       # Cart state, local storage plus server sync
+packages/domain     # Pure types and functional helpers
+packages/db         # Drizzle schema, migrations, seed
+packages/config     # Shared tsconfig, Tailwind, oxlint config
+docs/plan           # Phased build plan
+docs/screenshots    # Screenshots used in this README
+docker-compose.yml  # Local Postgres
 ```
+
+## API
+
+`GET /health` plus routers under `/v1`: `specimens`, `cart`, `orders`, `me`, `collections`, `addresses`, `inquiries`, `workspace`. Protected routes verify a Firebase ID token server-side; workspace routes additionally require the `curator` or `admin` role.
